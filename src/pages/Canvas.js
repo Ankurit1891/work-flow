@@ -13,17 +13,11 @@ const Canvas = (props) => {
     setNodes((prevNode) => {
       return [...nodes, newNode];
     });
-    // props.onAddNewNode(newNode);
-    console.log(newNode);
-    // setNodes(nodes.push(newNode));
-    console.log(nodes);
   };
 
   return (
     <div className="canvas-class">
       <div className="canvas">
-        {/* <FlowChart>{props.children}</FlowChart> */}
-
         <FlowChart nodes={nodes} edges={initialEdges}>
           {props.children}
         </FlowChart>
