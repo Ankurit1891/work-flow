@@ -31,7 +31,7 @@ const initialEdges = [
     source: "1",
     target: "2",
     type: "smoothstep",
-    animated: false,
+    animated: true,
   },
   {
     id: "e2->3",

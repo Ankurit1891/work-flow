@@ -1,22 +1,78 @@
-import React from "react";
-
+import React, { useState } from "react";
+import CustomNode from "./CustomNode";
+import { motion } from "framer-motion";
+import { nodeList } from "../node_data/RightBarNodeList";
 const RightBar = (props) => {
-  //   const [node, setNode] = useState(initialNodes);
-  //   const [edges, setEdges] = useState(initialEdges);
   const onClickHandler = () => {
     console.log("hi");
-    const newNode = {
-      id: Math.random(),
-      key: Math.random(),
-      type: "input",
-      data: { label: "Input Node" },
-      position: { x: Math.random() * 350, y: Math.random() * 350 },
-    };
-    props.onAddNode(newNode);
+  };
+  const [openBar, setOpenBar] = useState(true);
+  const [isOpen, setisOpen] = useState("➡️");
+  let open = true;
+
+  const sidebarOnClickHandler = (e) => {
+    props.setOpenRightBar((prev) => {
+      console.log("was", prev, "now", !prev);
+      open = !prev;
+      setOpenBar(open);
+      setisOpen((prev) => {
+        return open === true ? "➡️" : "⬅️";
+      });
+      return !prev;
+    });
+  };
+
+  console.log(open);
+  const onNodeAdd = (x, y) => {
+    props.onAddNewNode(x, y);
   };
   return (
-    <div>
-      <button onClick={onClickHandler}>Add</button>
+    <div style={{ display: "flex" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <motion.button
+          whileHover={{
+            scale: 1.1,
+            originX: 0,
+            originY: 0,
+            color: "#f8e112",
+          }}
+          className="sidebar-button"
+          onClick={sidebarOnClickHandler}
+        >
+          <div>{isOpen}</div>
+        </motion.button>
+      </div>
+
+      {openBar && (
+        <div style={{ overflowY: "auto", overflowX: "hidden" }}>
+          {nodeList.map((node) => {
+            return (
+              <div key={node.key}>
+                <CustomNode
+                  parent={"rightBar"}
+                  onNodeAdd={onNodeAdd}
+                  key={node.NodeKey}
+                  NodeID={node.nodeID}
+                  Nodeheight={node.nodeHeight}
+                  Nodewidth={node.nodeWidth}
+                  NodebackgroundColor={node.nodeBackgroundColor}
+                  NodeborderRadius={node.nodeBorderRadius}
+                  Nodemargin={node.nodeMargin}
+                  Nodepadding={node.nodePadding}
+                ></CustomNode>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* <button onClick={onClickHandler}>CLick</button> */}
     </div>
   );
 };

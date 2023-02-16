@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import ReactFlow, {
   Background,
   ControlButton,
@@ -14,13 +14,16 @@ import CustomNode from "./CustomNode";
 import Modal from "./Modal";
 import NodeForm from "./NodeForm";
 
-const FlowChart = () => {
+const FlowChart = (props) => {
   const [edges, setEdges] = useState(initialEdges);
   const [nodes, setNodes] = useState(initialNodes);
   const [openModal, setOpenModal] = useState(false);
   // const [openFormModal, setOpenFormModal] = useState(false);
+  useEffect(() => {
+    if (props.cords[0]) onAddNode(props.cords[0], props.cords[1]);
+  }, [props.cords]);
 
-  const onAddNode = (x = 90, y = 100) => {
+  const onAddNode = (x, y) => {
     const name = prompt("Enter the node name");
     let type = prompt("Enter the type...  Input , Output  or Default")
       ?.toLowerCase()
@@ -50,7 +53,7 @@ const FlowChart = () => {
           </div>
         ),
       },
-      position: { x: x, y: y + 100 },
+      position: { x: x, y: y },
     };
 
     setNodes((prevNode) => {
@@ -77,6 +80,7 @@ const FlowChart = () => {
       source: source,
       target: target,
       type: "smoothstep",
+      animated: true,
     };
     setEdges([...edges, newEdge]);
   };
@@ -85,7 +89,7 @@ const FlowChart = () => {
     const { source, target, data } = newConnection;
     console.log("Updated edge data:", data);
     console.log("Edge source:", source);
-    console.log("Tatget :", target);
+    console.log("Target :", target);
   };
   const onEdgesChange = useCallback(
     (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
