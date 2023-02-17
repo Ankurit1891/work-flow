@@ -13,23 +13,33 @@ const Canvas = (props) => {
 
   const [xx, setxx] = useState(null);
   const [yy, setyy] = useState(null);
+  const [height, setheight] = useState(null);
+  const [backgroundColor, setbackgroundColor] = useState("white");
+  const [margin, setmargin] = useState("10px");
+  const [key, setkey] = useState(null);
 
-  const onAddNode = (x, y) => {
-    console.log("this is canvas", x, y);
+  const onAddNode = (x, y, height, backgroundColor, margin, key) => {
+    console.log("this is canvas", x, y, height, backgroundColor, margin, key);
     setxx(x);
     setyy(y);
+    setheight(height);
+    setbackgroundColor(backgroundColor);
+    setmargin(margin);
+    setkey(key);
   };
 
   return (
     <div className="canvas-class">
       <motion.div
         animate={{
-          width: open ? "80%" : "94%",
+          width: open ? "77.5%" : "94%",
         }}
         className="canvas"
       >
         <FlowChart
           cords={[xx, yy]}
+          styles={[height, margin, backgroundColor]}
+          keyId={key}
           nodes={nodes}
           edges={initialEdges}
         ></FlowChart>
@@ -41,7 +51,7 @@ const Canvas = (props) => {
         }}
         transition={{
           type: "inirtia",
-          // stiffness: "200",
+
           duration: "0.3",
         }}
         className="right-bar"

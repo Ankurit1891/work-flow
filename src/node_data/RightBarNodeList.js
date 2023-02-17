@@ -1,9 +1,25 @@
+const nodeStyle = {
+  background: "#ffffff",
+  color: "#000000",
+  width: 100,
+  height: 50,
+  padding: 0,
+  margin: 0,
+  border: "2px solid #000000",
+  boxShadow: "3px 3px 3px #888888",
+  textAlign: "center",
+  fontFamily: "Arial, sans-serif",
+  fontSize: 16,
+  fontWeight: "bold",
+  textTransform: "uppercase",
+  lineHeight: 1.2,
+};
 const nodeList = [
   {
     key: "type1",
     nodeID: "type1",
     nodeHeight: "200",
-    nodeWidth: "wrap",
+    nodeWidth: "fit-content",
     nodeBackgroundColor: "#b8badd",
     nodeBorderRadius: "10px",
     nodeMargin: "10px",
@@ -11,9 +27,9 @@ const nodeList = [
   },
   {
     key: "type2",
-    nodeID: "type1",
+    nodeID: "type2",
     nodeHeight: "200",
-    nodeWidth: "wrap",
+    nodeWidth: "fit-content",
     nodeBackgroundColor: "#ff7c7c",
     nodeBorderRadius: "10px",
     nodeMargin: "10px",
@@ -21,9 +37,9 @@ const nodeList = [
   },
   {
     key: "type3",
-    nodeID: "type1",
+    nodeID: "type3",
     nodeHeight: "200",
-    nodeWidth: "wrap",
+    nodeWidth: "fit-content",
     nodeBackgroundColor: "#3f459b",
     nodeBorderRadius: "10px",
     nodeMargin: "10px",
@@ -31,4 +47,4 @@ const nodeList = [
   },
 ];
 
-export { nodeList };
+export { nodeList, nodeStyle };

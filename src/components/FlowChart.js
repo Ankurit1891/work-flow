@@ -8,22 +8,62 @@ import ReactFlow, {
   MiniMap,
   Controls,
 } from "react-flow-renderer";
-
+import { nodeStyle } from "../node_data/RightBarNodeList";
 import { initialEdges, initialNodes } from "../node_data/NodeData";
 import CustomNode from "./CustomNode";
 import Modal from "./Modal";
 import NodeForm from "./NodeForm";
+import { useDrop } from "react-dnd";
 
 const FlowChart = (props) => {
   const [edges, setEdges] = useState(initialEdges);
   const [nodes, setNodes] = useState(initialNodes);
   const [openModal, setOpenModal] = useState(false);
-  // const [openFormModal, setOpenFormModal] = useState(false);
-  useEffect(() => {
-    if (props.cords[0]) onAddNode(props.cords[0], props.cords[1]);
-  }, [props.cords]);
 
-  const onAddNode = (x, y) => {
+  const [{ isOver }, drop] = useDrop(() => ({
+    accept: "div",
+    drop: (item, monitor) => {
+      console.log(
+        `id = ${item.id},
+        x =${item.x},
+        y =${item.y},
+        key =${item.nodeKey},
+        height =${item.nodeHeight},
+        color =${item.nodeBackgroundColor},
+        margin =${item.nodeMargin}`
+      );
+      onAddNode(
+        item.x,
+        item.y,
+        item.nodeKey,
+        item.nodeBackgroundColor,
+        item.nodeHeight,
+        item.nodeMargin
+      );
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+  }));
+
+  useEffect(() => {
+    if (props.cords[0] && props.cords[1]) {
+      onAddNode(
+        props.cords[0],
+        props.cords[1],
+        props.styles[0],
+        props.styles[1],
+        props.styles[2],
+        props.keyId
+      );
+    }
+  }, [props.cords[0], props.cords[1]]);
+
+  const onAddNode = (x, y, keyId, backgroundColor, height, margin) => {
+    console.log(
+      `x = ${x} ,y = ${y} printing key = ${keyId} - height=${height} - margin=${margin} - backgroundCOlor = ${backgroundColor}`
+    );
+    const color = backgroundColor;
     const name = prompt("Enter the node name");
     let type = prompt("Enter the type...  Input , Output  or Default")
       ?.toLowerCase()
@@ -39,23 +79,30 @@ const FlowChart = (props) => {
         type = "";
         break;
     }
-
+    console.log(keyId);
     const newNode = {
-      id: `${nodes.length}`,
-      key: `${nodes.length}`,
+      id: `${nodes.length + 1}`,
+      key: `${nodes.length + 1}`,
       type: type,
       name: name,
+      keyId: String(keyId),
       animated: false,
       data: {
         label: (
           <div>
-            <CustomNode name={name}></CustomNode>
+            <CustomNode
+              Nodeheight={height}
+              NodebackgroundColor={color}
+              Nodemargin={margin}
+              name={name}
+              parent={"flowchart"}
+            ></CustomNode>
           </div>
         ),
+        style: { nodeStyle },
       },
       position: { x: x, y: y },
     };
-
     setNodes((prevNode) => {
       return [...prevNode, newNode];
     });
@@ -101,7 +148,14 @@ const FlowChart = (props) => {
       console.log(node.position.x);
       onAddNode(node.position.x, node.position.y);
     }
-    console.log("Node clicked:", node.id, " name:", node.name);
+    console.log(
+      "Node clicked:",
+      node.id,
+      " name:",
+      node.name,
+      "keyId:",
+      node.keyId
+    );
   };
   const onEdgeRightClick = (event, edge) => {
     console.log("Edge clicked:", edge.id, " name:", edge.name);
@@ -116,10 +170,11 @@ const FlowChart = (props) => {
     event.preventDefault();
   };
   return (
-    <>
+    <div ref={drop} style={{ width: "100%", height: "100%" }}>
       {/* {openFormModal && <NodeForm setOpenFormModal={setOpenFormModal} />} */}
       {openModal && <Modal setOpenModal={setOpenModal} />}
       <ReactFlow
+        // ref={drop}
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -139,13 +194,16 @@ const FlowChart = (props) => {
               edges.map((e) => {
                 return console.log(e);
               });
+              nodes.map((e) => {
+                return console.log(e);
+              });
             }}
           >
             Add
           </ControlButton>
         </Controls>
       </ReactFlow>
-    </>
+    </div>
   );
 };
 

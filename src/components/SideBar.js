@@ -5,6 +5,8 @@ import { BiAnalyse } from "react-icons/bi";
 import { AiTwotoneFileExclamation } from "react-icons/ai";
 import { BsFillBrushFill } from "react-icons/bs";
 import { NavLink } from "react-router-dom";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const routes = [
   {
@@ -30,6 +32,10 @@ const routes = [
 ];
 
 const SideBar = ({ children }) => {
+  const mainSectionOnClick = (e) => {
+    setIsOpen(false);
+  };
+
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => {
     setIsOpen((open) => !open);
@@ -86,7 +92,11 @@ const SideBar = ({ children }) => {
           ))}
         </motion.section>
       </motion.div>
-      <main className="main-body-section">{children}</main>
+      <DndProvider backend={HTML5Backend}>
+        <main className="main-body-section" onClick={mainSectionOnClick}>
+          {children}
+        </main>
+      </DndProvider>
     </div>
   );
 };
