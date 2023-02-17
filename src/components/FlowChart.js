@@ -81,8 +81,10 @@ const FlowChart = (props) => {
     }
     console.log(keyId);
     const newNode = {
-      id: `${nodes.length + 1}`,
-      key: `${nodes.length + 1}`,
+      // id: `${nodes.length + 1}`,
+      // key: `${nodes.length + 1}`,
+      id: `${Math.trunc(Math.random() * 500)}`,
+      key: `${Math.trunc(Math.random() * 500)}`,
       type: type,
       name: name,
       keyId: String(keyId),
