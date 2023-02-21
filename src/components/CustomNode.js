@@ -39,15 +39,15 @@ const CustomNode = (props) => {
         cursor: isDragging ? "grabbing" : "grab",
         display: "flex",
         flexDirection: "column",
-        height: isDragging ? "100px" : props.Nodeheight,
+        height: isDragging ? "100px" : "wrap",
         width: props.parent === "rightBar" ? "180px" : "wrap",
         maxWidth: "170px",
         border: isDragging ? "5px solid white" : "1px solid white",
         backgroundColor: props.NodebackgroundColor,
         borderRadius: isDragging ? "0px" : "5px",
-        margin: props.parent === "rightBar" ? props.Nodemargin : "0px",
-        paddingBottom: "10px",
-        padding: props.parent === "rightBar" ? "10px" : "10px",
+        margin: props.parent === "rightBar" ? props.Nodemargin : "-5px",
+        padding: props.parent === "rightBar" ? "15px" : "10px",
+        paddingBottom: props.parent === "rightBar" ? "15px" : "0px",
       }}
     >
       <div style={{ display: "flex", flexDirection: "row" }}>
