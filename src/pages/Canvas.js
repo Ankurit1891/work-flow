@@ -32,7 +32,7 @@ const Canvas = (props) => {
     <div className="canvas-class">
       <motion.div
         animate={{
-          width: open ? "77.5%" : "94%",
+          width: open ? "80%" : "94%",
         }}
         className="canvas"
       >

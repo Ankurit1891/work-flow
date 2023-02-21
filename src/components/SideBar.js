@@ -50,7 +50,7 @@ const SideBar = ({ children }) => {
         className="sidebar"
       >
         <div className="top_section">
-          {isOpen && <h1 className="logo_text">Yoo.....</h1>}
+          {isOpen && <h1 className="logo_text">Yo ...</h1>}
           <div className="bars">
             <FaBars onClick={toggle} />
           </div>

@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+import { motion } from "framer-motion";
 import ReactFlow, {
   Background,
   ControlButton,
@@ -15,8 +16,22 @@ import CustomNode from "./CustomNode";
 import Modal from "./Modal";
 import { useDrop } from "react-dnd";
 import NodeForm from "./NodeForm";
+import EdgeModal from "./EdgeModal";
 
 const FlowChart = (props) => {
+  const [nodeObject, setNodeObject] = useState({
+    xCords: 0,
+    yCords: 0,
+    nodeKey: "",
+    nodeBackgroundColor: "",
+    nodeHeight: "",
+    nodeMargin: "",
+    nodeType: "",
+    nodeIcon: "",
+    nodeName: "",
+    NodeDescription: "",
+  });
+  const [showEdgeModal, setShowEdgeModal] = useState(false);
   const [edges, setEdges] = useState(initialEdges);
   const [nodes, setNodes] = useState(initialNodes);
   const [openModal, setOpenModal] = useState(false);
@@ -26,31 +41,64 @@ const FlowChart = (props) => {
     accept: "div",
     drop: (item, monitor) => {
       const dropCoordinates = monitor.getClientOffset();
-      const xCords = dropCoordinates.x - 150;
-      const yCords = dropCoordinates.y - 180;
-
+      setNodeObject({
+        xCords: dropCoordinates.x - 150,
+        yCords: dropCoordinates.y - 180,
+        nodeKey: item.nodeKey,
+        nodeBackgroundColor: item.nodeBackgroundColor,
+        nodeHeight: item.nodeHeight,
+        nodeMargin: item.nodeMargin,
+        nodeType: item.nodeType,
+        nodeIcon: item.nodeIcon,
+        nodeName: item.nodeName,
+        NodeDescription: "",
+      });
+      // xCords = dropCoordinates.x - 150;
+      // yCords = dropCoordinates.y - 180;
+      // nodeKey = item.nodeKey;
+      // nodeBackgroundColor = item.nodeBackgroundColor;
+      // nodeHeight = item.nodeHeight;
+      // nodeMargin = item.nodeMargin;
+      // setNodeIcon(item.nodeIcon);
+      // nName = item.nodeName;
+      // nIcon = ;
+      // setNodeName(item.nodeName);
+      // nodeType = ;
       setOpenFormModal((e) => {
         return !e;
       });
 
-      console.log(`after setting form modal`);
-      onAddNode(
-        xCords,
-        yCords,
-        item.nodeKey,
-        item.nodeBackgroundColor,
-        item.nodeHeight,
-        item.nodeMargin,
-        item.nodeIcon,
-        item.nodeName,
-        item.nodeType
-      );
+      // onAddNode(
+      //   xCords,
+      //   yCords,
+      //   nodeKey,
+      //   nodeBackgroundColor,
+      //   nodeHeight,
+      //   nodeMargin,
+      //   nIcon,
+      //   nName,
+      //   nodeType
+      // );
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
     }),
   }));
-
+  const onClickForm = (description) => {
+    console.log(nodeObject.nodeName, nodeObject.xCords);
+    onAddNode(
+      nodeObject.xCords,
+      nodeObject.yCords,
+      nodeObject.nodeKey,
+      nodeObject.nodeBackgroundColor,
+      nodeObject.nodeHeight,
+      nodeObject.nodeMargin,
+      nodeObject.nodeIcon,
+      nodeObject.nodeName,
+      nodeObject.nodeType,
+      description
+    );
+  };
   const uniqueId = () => {
     const dateString = Date.now().toString(36);
     const randomness = Math.random().toString(36).substr(2);
@@ -66,11 +114,12 @@ const FlowChart = (props) => {
     margin,
     icon,
     name,
-    type
+    type,
+    description
   ) => {
-    console.log(x, y, keyId, backgroundColor, height, margin, icon, name);
+    console.log(x, y, keyId, backgroundColor, height, margin, icon, name, type);
     const color = backgroundColor;
-    const description = prompt("Enter the node description");
+    // const description = prompt("Enter the node description");
 
     switch (type) {
       case "input":
@@ -80,25 +129,23 @@ const FlowChart = (props) => {
         type = "output";
         break;
       default:
-        type = "";
+        type = "default";
         break;
     }
 
     const newNode = {
-      id: `${uniqueId()}`,
-      key: `${Math.trunc(Math.random() * 500)}`,
-      type: type,
+      // id: `${uniqueId()}`,
+      id: `${nodes.length}`,
       name: name,
+      description: description,
+      type: type,
+      key: `${Math.trunc(Math.random() * 500)}`,
       keyId: String(keyId),
       animated: false,
       data: {
         label: (
-          <div
-          // className="react-flow__node-default react-flow__node-group react-flow__node-input react-flow__node-output"
-          // style={{ padding: "2px" }}
-          >
+          <div>
             <CustomNode
-              // className="react-flow__node-default react-flow__node-group react-flow__node-input react-flow__node-output"
               NodeIcon={icon}
               NodeDescription={description}
               Nodeheight={height}
@@ -124,6 +171,7 @@ const FlowChart = (props) => {
   );
 
   const onConnect = (params) => {
+    const edgeName = prompt("Enter edge Name");
     const { source, target } = params;
     const newEdge = {
       id: `e${source}->${target}`,
@@ -133,6 +181,11 @@ const FlowChart = (props) => {
       color: "black",
       type: "smoothstep",
       animated: false,
+      // data: {
+      //   label: edgeName,
+      //   // labelStyle: { fill: "black", fontSize: 20 },
+      // },
+      label: edgeName,
       markerEnd: {
         type: MarkerType.ArrowClosed,
       },
@@ -160,7 +213,20 @@ const FlowChart = (props) => {
     );
   };
   const onEdgeRightClick = (event, edge) => {};
-  const onEndeMouseEnter = (event, edge) => {};
+  const onEndeMouseEnter = (event, edge) => {
+    setShowEdgeModal((val) => {
+      console.log(`New val = ${!val}`);
+      return !val;
+    });
+    console.log(showEdgeModal);
+  };
+  const onEndeMouseLeave = (event, edge) => {
+    setShowEdgeModal((val) => {
+      console.log(`New val = ${!val}`);
+      return !val;
+    });
+    console.log(showEdgeModal);
+  };
 
   const onNodeRightClick = (event, node) => {
     setOpenModal(true);
@@ -170,6 +236,7 @@ const FlowChart = (props) => {
     <div
       ref={drop}
       style={{
+        position: "relative",
         width: "100%",
         height: "100%",
         backgroundColor: "#232629",
@@ -177,8 +244,25 @@ const FlowChart = (props) => {
         border: "1px solid grey",
       }}
     >
-      {/* {openFormModal && <NodeForm setOpenFormModal={setOpenFormModal} />} */}
+      {openFormModal && (
+        <motion.div
+          initial={{ opacity: 0.5 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.05 }}
+        >
+          <NodeForm
+            onAddNode={onClickForm}
+            setOpenFormModal={setOpenFormModal}
+            nodeName={nodeObject.nodeName}
+            nodeIcon={nodeObject.nodeIcon}
+            nodeBackgroundColor={nodeObject.nodeBackgroundColor}
+          />
+        </motion.div>
+      )}
+      {showEdgeModal && <EdgeModal></EdgeModal>}
       {openModal && <Modal setOpenModal={setOpenModal} />}
+
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -190,6 +274,7 @@ const FlowChart = (props) => {
         onNodeContextMenu={onNodeRightClick}
         onEdgeClick={onEdgeRightClick}
         onEdgeMouseEnter={onEndeMouseEnter}
+        onEdgeMouseLeave={onEndeMouseLeave}
         fitView
       >
         <MiniMap />

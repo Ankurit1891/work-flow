@@ -5,7 +5,6 @@ import Analytics from "./pages/Analytics";
 import FileManager from "./pages/FileManager";
 import SideBar from "./components/SideBar";
 import Canvas from "./pages/Canvas";
-import NodeForm from "./components/NodeForm";
 
 function App() {
   return (

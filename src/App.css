@@ -103,3 +103,16 @@ path.react-flow__edge-path {
 .custom-node {
   padding: 2px;
 }
+
+.backdrop__input__form__modal {
+  background-color: #000000;
+  z-index: 100;
+}
+
+.react-flow__edge-textbg {
+  fill: #ed4545;
+}
+.react-flow__edge-text {
+  font-size: 10px !important;
+  color: #ffffff !important;
+}

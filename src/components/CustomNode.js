@@ -70,7 +70,7 @@ const CustomNode = (props) => {
             color: "white",
             fontWeight: "300",
             textAlign: "left",
-            fontSize: props.parent === "rightBar" ? "15px" : "10px",
+            fontSize: props.parent === "rightBar" ? "15px" : "9px",
           }}
         >
           {props.NodeDescription}
