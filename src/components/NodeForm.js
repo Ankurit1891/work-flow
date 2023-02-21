@@ -1,12 +1,18 @@
 import React from "react";
 import "./Modal.css";
 
-const NodeForm = () => {
+const NodeForm = ({ setOpenFormModal }) => {
   return (
     <div className="modalBackground">
       <div className="modalContainer">
         <div className="titleCloseBtn">
-          <button onClick={() => {}}>❌</button>
+          <button
+            onClick={() => {
+              setOpenFormModal(false);
+            }}
+          >
+            ❌
+          </button>
         </div>
         <div className="title">
           <h1>Node Name</h1>

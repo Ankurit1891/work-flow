@@ -5,7 +5,7 @@ const initialNodes = [
     name: "start",
     type: "input",
     data: { label: "Start" },
-    position: { x: 250, y: 25 },
+    position: { x: 500, y: 150 },
   },
 
   // {

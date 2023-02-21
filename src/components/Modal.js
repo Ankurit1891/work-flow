@@ -1,7 +1,7 @@
 import React from "react";
 import "./Modal.css";
 import { motion } from "framer-motion";
-function Modal({ setOpenModal }) {
+function Modal({ setOpenModal, setOpenFormModal }) {
   return (
     <div className="modalBackground">
       <motion.div
@@ -21,6 +21,7 @@ function Modal({ setOpenModal }) {
             }}
             onClick={() => {
               setOpenModal(false);
+              setOpenFormModal(false);
             }}
           >
             ❌
