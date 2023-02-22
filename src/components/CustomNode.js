@@ -47,7 +47,7 @@ const CustomNode = (props) => {
         borderRadius: isDragging ? "0px" : "5px",
         margin: props.parent === "rightBar" ? props.Nodemargin : "-5px",
         padding: props.parent === "rightBar" ? "15px" : "10px",
-        paddingBottom: props.parent === "rightBar" ? "15px" : "0px",
+        paddingBottom: props.parent === "rightBar" ? "15px" : "7px",
       }}
     >
       <div style={{ display: "flex", flexDirection: "row" }}>

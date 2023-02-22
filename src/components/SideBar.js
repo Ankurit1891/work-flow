@@ -38,7 +38,9 @@ const SideBar = ({ children }) => {
 
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => {
-    setIsOpen((open) => !open);
+    setIsOpen((open) => {
+      return !open;
+    });
   };
   return (
     <div className="main-container">

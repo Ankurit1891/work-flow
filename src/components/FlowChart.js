@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
+import "reactflow/dist/style.css";
 import ReactFlow, {
   Background,
   ControlButton,
@@ -8,7 +9,7 @@ import ReactFlow, {
   applyNodeChanges,
   MiniMap,
   Controls,
-} from "react-flow-renderer";
+} from "reactflow";
 import "../App.css";
 import { nodeStyle } from "../node_data/RightBarNodeList";
 import { initialEdges, initialNodes } from "../node_data/NodeData";
@@ -180,11 +181,14 @@ const FlowChart = (props) => {
       strokeWidth: 3,
       color: "black",
       type: "smoothstep",
+      className: "smooth-edge",
       animated: false,
-      // data: {
-      //   label: edgeName,
-      //   // labelStyle: { fill: "black", fontSize: 20 },
-      // },
+      orient: "auto",
+      style: { width: "10px" },
+      labelBgStyle: { fill: "white" },
+      // offset: { x: 20, y: 20 },
+      labelStyle: { fill: "blue", fontWeight: "bold" },
+      labelShowBg: true,
       label: edgeName,
       markerEnd: {
         type: MarkerType.ArrowClosed,
@@ -277,8 +281,8 @@ const FlowChart = (props) => {
         onEdgeMouseLeave={onEndeMouseLeave}
         fitView
       >
-        <MiniMap />
         <Background variant="dots" gap={10} size={0.3} color="white" />
+        <MiniMap />
         <Controls>
           <ControlButton
             onClick={() => {
