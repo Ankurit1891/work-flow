@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CustomNode from "./CustomNode";
-import { motion, transform } from "framer-motion";
+import { motion } from "framer-motion";
 import { nodeList } from "../node_data/RightBarNodeList";
 import { AiOutlineDoubleRight } from "react-icons/ai";
 import { AiOutlineDoubleLeft } from "react-icons/ai";
@@ -47,7 +47,7 @@ const RightBar = (props) => {
           onClick={sidebarOnClickHandler}
         >
           <motion.div
-            transition={{ duration: 0.5, ease: "easeInOut" }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
             style={{ color: "white", fontWeight: "bold", fontSize: "20px" }}
           >
             {isOpen}

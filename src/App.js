@@ -12,6 +12,7 @@ function App() {
     <Router>
       <SideBar>
         <Routes>
+          <Route exact path="/" element={<Canvas></Canvas>} />
           <Route exact path="/dashboard" element={<Dashboard></Dashboard>} />
           <Route exact path="/analytics" element={<Analytics></Analytics>} />
           <Route

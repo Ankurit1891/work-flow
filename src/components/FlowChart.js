@@ -38,7 +38,7 @@ const FlowChart = (props) => {
     NodeDescription: "",
   });
   // const [showEdgeModal, setShowEdgeModal] = useState(false);
-  // const [edgeObject, setEdgeObject] = useState({ text: "edge", desc: "" });
+  const [edgeObject, setEdgeObject] = useState({ text: "edge", desc: "" });
   const [canvasColor, setCanvasColor] = useState("#232629");
   const [edges, setEdges] = useState(initialEdges);
   const [nodes, setNodes] = useState(initialNodes);
@@ -187,39 +187,41 @@ const FlowChart = (props) => {
   );
 
   const onAddEdge = (text, desc) => {
-    // setEdgeObject({ text: text, desc: desc });
+    setEdgeObject({ text: text, desc: desc });
   };
 
   // onconnect the edge (adding the edge)
 
   const onConnect = (params) => {
     setEdgeOpenFormModal(true);
-    const { source, target } = params;
-    const newEdge = {
-      id: `e${source}->${target}`,
-      source: source,
-      target: target,
-      strokeWidth: 3,
-      color: "black",
-      type: "smoothstep",
-      className: "smooth-edge",
-      animated: false,
-      orient: "auto",
-      style: { width: "10px", border: "2px solid white" },
-      labelBgStyle: { fill: "#232629" },
-      // offset: { x: 20, y: 20 },
-      labelStyle: {
-        fill: "white",
-        fontWeight: "400",
-      },
-      labelShowBg: true,
-      label: "text",
-      description: "desc",
-      markerEnd: {
-        type: MarkerType.ArrowClosed,
-      },
-    };
-    setEdges([...edges, newEdge]);
+    if (!openEdgeFormModal) {
+      const { source, target } = params;
+      const newEdge = {
+        id: `e${source}->${target}`,
+        source: source,
+        target: target,
+        strokeWidth: 3,
+        color: "black",
+        type: "smoothstep",
+        className: "smooth-edge",
+        animated: false,
+        orient: "auto",
+        style: { width: "10px", border: "2px solid white" },
+        labelBgStyle: { fill: "#232629" },
+        // offset: { x: 20, y: 20 },
+        labelStyle: {
+          fill: "white",
+          fontWeight: "400",
+        },
+        labelShowBg: true,
+        label: edgeObject.text,
+        description: edgeObject.label,
+        markerEnd: {
+          type: MarkerType.ArrowClosed,
+        },
+      };
+      setEdges([...edges, newEdge]);
+    }
   };
 
   const onEdgesChange = useCallback(
@@ -291,7 +293,6 @@ const FlowChart = (props) => {
 
   const onColorChangeHandler = (e) => {
     setCanvasColor(e.target.value);
-    console.log(e.target.value);
   };
 
   // exporting the workflow to chart
