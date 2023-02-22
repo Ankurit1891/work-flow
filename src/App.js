@@ -5,6 +5,7 @@ import Analytics from "./pages/Analytics";
 import FileManager from "./pages/FileManager";
 import SideBar from "./components/SideBar";
 import Canvas from "./pages/Canvas";
+// import EdgeModalForm from "./components/EdgeModalForm";
 
 function App() {
   return (
@@ -19,6 +20,11 @@ function App() {
             element={<FileManager></FileManager>}
           />
           <Route exact path="/canvas" element={<Canvas></Canvas>} />
+          {/* <Route
+            exact
+            path="/canvas"
+            element={<EdgeModalForm></EdgeModalForm>}
+          /> */}
         </Routes>
       </SideBar>
     </Router>

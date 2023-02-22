@@ -4,6 +4,7 @@ const initialNodes = [
     key: "0",
     name: "start",
     type: "input",
+    color: "white",
     data: { label: "Start" },
     position: { x: 500, y: 150 },
   },

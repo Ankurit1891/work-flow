@@ -116,3 +116,16 @@ path.react-flow__edge-path {
   font-size: 10px !important;
   color: #ffffff !important;
 }
+
+.panel__background-color {
+  width: 200px;
+  font-style: italic;
+  display: flex;
+  border: 2px solid rgb(255, 255, 255);
+  padding: 3px 2px 3px 3px;
+  border-radius: 5px;
+  background-color: rgb(164, 159, 159);
+  align-content: center;
+  justify-content: space-between;
+  align-items: stretch;
+}
