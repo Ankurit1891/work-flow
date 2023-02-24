@@ -1,7 +1,7 @@
 import React from "react";
 import "./Modal.css";
 import { motion } from "framer-motion";
-function Modal({ setOpenModal, setOpenFormModal }) {
+function Modal({ setOpenModal }) {
   return (
     <div className="modalBackground">
       <motion.div
@@ -21,7 +21,6 @@ function Modal({ setOpenModal, setOpenFormModal }) {
             }}
             onClick={() => {
               setOpenModal(false);
-              setOpenFormModal(false);
             }}
           >
             ❌
@@ -40,7 +39,7 @@ function Modal({ setOpenModal, setOpenFormModal }) {
             }}
             transition={{ duration: 0.1 }}
             whileHover={{
-              backgroundColor: "black",
+              backgroundColor: "#000000",
               scale: 1.1,
             }}
             onClick={() => {

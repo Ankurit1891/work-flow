@@ -4,10 +4,10 @@ import "./NodeForm.css";
 import { TextField } from "@fluentui/react/lib/TextField";
 import { motion } from "framer-motion";
 
-const EdgeModalForm = ({ onAddEdge, setEdgeOpenFormModal }) => {
+const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge }) => {
   const edgeFormAcceptHandler = () => {
     setEdgeOpenFormModal(false);
-    onAddEdge(text, description);
+    alterEdge(text, description, edge.id);
   };
 
   const [text, setText] = useState("");
@@ -43,7 +43,7 @@ const EdgeModalForm = ({ onAddEdge, setEdgeOpenFormModal }) => {
             // style={{ boxShadow: `2px 2px 10px ${nodeBackgroundColor}` }}
           >
             {/* <i>{nodeName}</i> */}
-            This is edge modal
+            {text}
           </span>
         </div>
         <div

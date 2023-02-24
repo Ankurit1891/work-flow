@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import "reactflow/dist/style.css";
 import { BsSave2 } from "react-icons/bs";
 import { BsFillPrinterFill } from "react-icons/bs";
+import { AiOutlineFontSize } from "react-icons/ai";
 
 import ReactFlow, {
   Background,
@@ -25,6 +26,7 @@ import EdgeModalForm from "./EdgeModalForm";
 import html2canvas from "html2canvas";
 
 const FlowChart = (props) => {
+  const [selectedEdge, setSelectedEdge] = useState(null);
   const [nodeObject, setNodeObject] = useState({
     xCords: 0,
     yCords: 0,
@@ -37,8 +39,6 @@ const FlowChart = (props) => {
     nodeName: "",
     NodeDescription: "",
   });
-  // const [showEdgeModal, setShowEdgeModal] = useState(false);
-  const [edgeObject, setEdgeObject] = useState({ text: "edge", desc: "" });
   const [canvasColor, setCanvasColor] = useState("#232629");
   const [edges, setEdges] = useState(initialEdges);
   const [nodes, setNodes] = useState(initialNodes);
@@ -63,32 +63,9 @@ const FlowChart = (props) => {
         nodeName: item.nodeName,
         NodeDescription: "",
       });
-      // xCords = dropCoordinates.x - 150;
-      // yCords = dropCoordinates.y - 180;
-      // nodeKey = item.nodeKey;
-      // nodeBackgroundColor = item.nodeBackgroundColor;
-      // nodeHeight = item.nodeHeight;
-      // nodeMargin = item.nodeMargin;
-      // setNodeIcon(item.nodeIcon);
-      // nName = item.nodeName;
-      // nIcon = ;
-      // setNodeName(item.nodeName);
-      // nodeType = ;
       setOpenFormModal((e) => {
         return !e;
       });
-
-      // onAddNode(
-      //   xCords,
-      //   yCords,
-      //   nodeKey,
-      //   nodeBackgroundColor,
-      //   nodeHeight,
-      //   nodeMargin,
-      //   nIcon,
-      //   nName,
-      //   nodeType
-      // );
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -98,7 +75,6 @@ const FlowChart = (props) => {
   // on acception the node form
 
   const onClickForm = (description) => {
-    console.log(nodeObject.nodeName, nodeObject.xCords);
     onAddNode(
       nodeObject.xCords,
       nodeObject.yCords,
@@ -112,13 +88,6 @@ const FlowChart = (props) => {
       description
     );
   };
-  // const uniqueId = () => {
-  //   const dateString = Date.now().toString(36);
-  //   const randomness = Math.random().toString(36).substr(2);
-  //   return dateString + randomness;
-  // };
-
-  // making a new node
 
   const onAddNode = (
     x,
@@ -132,9 +101,7 @@ const FlowChart = (props) => {
     type,
     description
   ) => {
-    console.log(x, y, keyId, backgroundColor, height, margin, icon, name, type);
     const color = backgroundColor;
-    // const description = prompt("Enter the node description");
 
     switch (type) {
       case "input":
@@ -186,16 +153,12 @@ const FlowChart = (props) => {
     [setNodes]
   );
 
-  const onAddEdge = (text, desc) => {
-    setEdgeObject({ text: text, desc: desc });
-  };
-
   // onconnect the edge (adding the edge)
 
   const onConnect = (params) => {
-    setEdgeOpenFormModal(true);
     if (!openEdgeFormModal) {
       const { source, target } = params;
+      // onEdgeAdd(source,target);
       const newEdge = {
         id: `e${source}->${target}`,
         source: source,
@@ -203,19 +166,19 @@ const FlowChart = (props) => {
         strokeWidth: 3,
         color: "black",
         type: "smoothstep",
-        className: "smooth-edge",
+        className: "smoothstep",
         animated: false,
         orient: "auto",
         style: { width: "10px", border: "2px solid white" },
         labelBgStyle: { fill: "#232629" },
-        // offset: { x: 20, y: 20 },
+
         labelStyle: {
           fill: "white",
           fontWeight: "400",
         },
         labelShowBg: true,
-        label: edgeObject.text,
-        description: edgeObject.label,
+        label: "",
+        description: "",
         markerEnd: {
           type: MarkerType.ArrowClosed,
         },
@@ -232,18 +195,7 @@ const FlowChart = (props) => {
   //  function on node left click
 
   const onNodeLeftClick = (event, node) => {
-    // if (node.id === "0") {
-    //   // console.log(node.position.x);
-    //   onAddNode(node.position.x, node.position.y);
-    // }
-    // console.log(
-    //   "Node clicked:",
-    //   node.id,
-    //   " name:",
-    //   node.name,
-    //   "keyId:",
-    //   node.keyId
-    // );
+    console.log(node);
 
     if (node && node.getOutgoingEdges) {
       const outgoers = node.getOutgoingEdges();
@@ -251,34 +203,27 @@ const FlowChart = (props) => {
     }
   };
 
-  //function on mouse click on edge
+  //function on edge right click
 
-  const onEdgeRightClick = (event, edge) => {};
+  const onEdgeRightClick = (event, edge) => {
+    event.stopPropagation();
+    event.preventDefault();
+    setSelectedEdge(edge);
+    setEdgeOpenFormModal(true);
+  };
 
   //function on making the mouse entering the edge
 
-  const onEndeMouseEnter = (event, edge) => {
-    // setShowEdgeModal((val) => {
-    //   console.log(`New val = ${!val}`);
-    //   return !val;
-    // });
-    // console.log(uniqueId());
-    // console.log(showEdgeModal);
-  };
+  const onEndeMouseEnter = (event, edge) => {};
 
   //function on making the mouse leaving the edge
 
-  const onEndeMouseLeave = (event, edge) => {
-    // setShowEdgeModal((val) => {
-    //   console.log(`New val = ${!val}`);
-    //   return !val;
-    // });
-    // console.log(showEdgeModal);
-  };
+  const onEndeMouseLeave = (event, edge) => {};
 
   // on node right click
 
   const onNodeRightClick = (event, node) => {
+    event.stopPropagation();
     setOpenModal(true);
     event.preventDefault();
   };
@@ -308,8 +253,57 @@ const FlowChart = (props) => {
     });
   };
 
-  // rendering the component in react flow
+  const onCanvasRightClick = (e) => {
+    const xPos = nodes[nodes.length - 1].position.x;
+    const yPos = nodes[nodes.length - 1].position.y + 100;
 
+    e.preventDefault();
+    onAddNode(
+      xPos,
+      yPos,
+      "newKey",
+      "grey",
+      "100px",
+      "10px",
+      <AiOutlineFontSize />,
+      "Node Name",
+      "type - Custom",
+      "desc"
+    );
+  };
+
+  // // rendering the component in react flow
+  // function handleKeyDown(event) {
+  //   if (
+  //     event.key === "Enter" &&
+  //     event.target.classList.contains("react-flow")
+  //   ) {
+  //     event.stopPropagation();
+  //     console.log("Enter key pressed!");
+  //   }
+  // }
+
+  // // Register the event listener on the document object
+  // document.addEventListener("keydown", handleKeyDown);
+
+  const onAlterEdge = (text, desc, id) => {
+    selectedEdge.label = text;
+    selectedEdge.description = desc;
+
+    let edgeIndex = "";
+    edges.map((edge, index) => {
+      if (edge.id === id) {
+        edgeIndex = index;
+        return edge;
+      }
+      return "not found";
+    });
+
+    setEdges((edges) => {
+      edges.splice(edgeIndex, 1);
+      return [...edges, selectedEdge];
+    });
+  };
   return (
     <div
       ref={drop}
@@ -348,7 +342,8 @@ const FlowChart = (props) => {
           transition={{ duration: 0.05 }}
         >
           <EdgeModalForm
-            onAddEdge={onAddEdge}
+            edge={selectedEdge}
+            alterEdge={onAlterEdge}
             setEdgeOpenFormModal={setEdgeOpenFormModal}
           ></EdgeModalForm>
         </motion.div>
@@ -364,9 +359,10 @@ const FlowChart = (props) => {
         snapToGrid={true}
         onNodeClick={onNodeLeftClick}
         onNodeContextMenu={onNodeRightClick}
-        onEdgeClick={onEdgeRightClick}
+        onEdgeContextMenu={onEdgeRightClick}
         onEdgeMouseEnter={onEndeMouseEnter}
         onEdgeMouseLeave={onEndeMouseLeave}
+        onContextMenu={onCanvasRightClick}
         fitView
       >
         <Background variant="dots" gap={10} size={0.3} color="white" />
