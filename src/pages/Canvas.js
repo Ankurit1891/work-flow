@@ -7,8 +7,8 @@ import RightBar from "../components/RightBar";
 import { initialNodes, initialEdges } from "../node_data/NodeData";
 
 const Canvas = (props) => {
-  const [nodes, setNodes] = useState(initialNodes);
-
+  // const [nodes, setNodes] = useState(initialNodes);
+  const nodes = initialNodes;
   const [open, setOpen] = useState("true");
 
   const [xx, setxx] = useState(null);
@@ -28,6 +28,9 @@ const Canvas = (props) => {
     setkey(key);
   };
 
+  window.oncontextmenu = function (e) {
+    e.preventDefault();
+  };
   return (
     <div className="canvas-class">
       <motion.div

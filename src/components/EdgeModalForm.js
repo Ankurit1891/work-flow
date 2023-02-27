@@ -21,15 +21,27 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge }) => {
 
   return (
     <div className="modalBackground">
-      <div className="modalContainer">
+      <motion.div
+        className="modalContainer"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.3 }}
+      >
         <div className="titleCloseBtn">
-          <button
+          <motion.button
+            initial={{
+              rotate: 0,
+            }}
+            whileHover={{
+              rotate: +90,
+            }}
             onClick={() => {
               setEdgeOpenFormModal(false);
             }}
           >
             ❌
-          </button>
+          </motion.button>
         </div>
         <div className="heading-container">
           <span
@@ -43,7 +55,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge }) => {
             // style={{ boxShadow: `2px 2px 10px ${nodeBackgroundColor}` }}
           >
             {/* <i>{nodeName}</i> */}
-            {text}
+            Edge
           </span>
         </div>
         <div
@@ -103,7 +115,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge }) => {
             </motion.button>
           </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };

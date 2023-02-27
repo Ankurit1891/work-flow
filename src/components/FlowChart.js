@@ -24,8 +24,10 @@ import { useDrop } from "react-dnd";
 import NodeForm from "./NodeForm";
 import EdgeModalForm from "./EdgeModalForm";
 import html2canvas from "html2canvas";
+import OptionDialog from "./OptionDialog";
 
 const FlowChart = (props) => {
+  const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [nodeObject, setNodeObject] = useState({
     xCords: 0,
@@ -39,6 +41,7 @@ const FlowChart = (props) => {
     nodeName: "",
     NodeDescription: "",
   });
+  const [openDialog, setOpenDialog] = useState(false);
   const [canvasColor, setCanvasColor] = useState("#232629");
   const [edges, setEdges] = useState(initialEdges);
   const [nodes, setNodes] = useState(initialNodes);
@@ -206,9 +209,13 @@ const FlowChart = (props) => {
   //function on edge right click
 
   const onEdgeRightClick = (event, edge) => {
+    // console.log(edge.selected);
+    // edge.selected = false;
+    // console.log(edge.selected);
     event.stopPropagation();
     event.preventDefault();
     setSelectedEdge(edge);
+    // setSelectedEdge({ selected: false });
     setEdgeOpenFormModal(true);
   };
 
@@ -254,10 +261,18 @@ const FlowChart = (props) => {
   };
 
   const onCanvasRightClick = (e) => {
+    e.preventDefault();
+    setCoords({
+      x: e.clientY - 30,
+      y: e.clientX - 70,
+    });
+    setOpenDialog((e) => {
+      return !e;
+    });
+  };
+  const AddNode = () => {
     const xPos = nodes[nodes.length - 1].position.x;
     const yPos = nodes[nodes.length - 1].position.y + 100;
-
-    e.preventDefault();
     onAddNode(
       xPos,
       yPos,
@@ -271,7 +286,6 @@ const FlowChart = (props) => {
       "desc"
     );
   };
-
   // // rendering the component in react flow
   // function handleKeyDown(event) {
   //   if (
@@ -289,21 +303,16 @@ const FlowChart = (props) => {
   const onAlterEdge = (text, desc, id) => {
     selectedEdge.label = text;
     selectedEdge.description = desc;
-
-    let edgeIndex = "";
-    edges.map((edge, index) => {
-      if (edge.id === id) {
-        edgeIndex = index;
-        return edge;
+    let newEdges = [];
+    edges.forEach((edge, index) => {
+      if (edge.id !== id) {
+        newEdges.push(edge);
       }
-      return "not found";
     });
-
-    setEdges((edges) => {
-      edges.splice(edgeIndex, 1);
-      return [...edges, selectedEdge];
-    });
+    newEdges.push(selectedEdge);
+    setEdges(newEdges);
   };
+
   return (
     <div
       ref={drop}
@@ -316,6 +325,14 @@ const FlowChart = (props) => {
         border: "1px solid grey",
       }}
     >
+      {openDialog && (
+        <OptionDialog
+          xCords={coords.x}
+          yCords={coords.y}
+          AddNode={AddNode}
+          setOpenDialog={setOpenDialog}
+        ></OptionDialog>
+      )}
       {/* //Opening the form modal for nodes */}
       {openFormModal && (
         <motion.div
@@ -357,6 +374,9 @@ const FlowChart = (props) => {
         onEdgesChange={onEdgesChange}
         onConnect={onConnect}
         snapToGrid={true}
+        onClick={() => {
+          setOpenDialog(false);
+        }}
         onNodeClick={onNodeLeftClick}
         onNodeContextMenu={onNodeRightClick}
         onEdgeContextMenu={onEdgeRightClick}

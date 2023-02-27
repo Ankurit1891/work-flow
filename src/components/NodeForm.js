@@ -25,13 +25,19 @@ const NodeForm = ({
     <div className="modalBackground">
       <div className="modalContainer">
         <div className="titleCloseBtn">
-          <button
+          <motion.button
+            initial={{
+              rotate: 0,
+            }}
+            whileHover={{
+              rotate: +90,
+            }}
             onClick={() => {
               setOpenFormModal(false);
             }}
           >
             ❌
-          </button>
+          </motion.button>
         </div>
         <div className="heading-container">
           <span
