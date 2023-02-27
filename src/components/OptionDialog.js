@@ -15,6 +15,8 @@ const OptionDialog = (props) => {
           whileHover={{
             scale: 1.1,
             originX: 0,
+            color: "white",
+            fontWeight: "400",
           }}
           className="list-title"
           onClick={onClickHandler}
@@ -26,6 +28,8 @@ const OptionDialog = (props) => {
           whileHover={{
             scale: 1.1,
             originX: 0,
+            color: "white",
+            fontWeight: "400",
           }}
           className="list-title"
           onClick={() => {
@@ -38,6 +42,9 @@ const OptionDialog = (props) => {
         <motion.li
           whileHover={{
             scale: 1.1,
+            originX: 0,
+            color: "white",
+            fontWeight: "400",
           }}
           className="list-title"
           onClick={() => {
@@ -51,6 +58,8 @@ const OptionDialog = (props) => {
           whileHover={{
             scale: 1.1,
             originX: 0,
+            color: "white",
+            fontWeight: "400",
           }}
           className="list-title"
           onClick={() => {
@@ -64,6 +73,8 @@ const OptionDialog = (props) => {
           whileHover={{
             scale: 1.1,
             originX: 0,
+            color: "white",
+            fontWeight: "400",
           }}
           className="list-title"
           onClick={() => {

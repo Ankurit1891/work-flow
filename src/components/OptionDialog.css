@@ -10,7 +10,7 @@
   padding-right: 10px;
   border: 1px solid #0e0d0d;
   box-shadow: 1px 1px 4px -1px #ece5e5;
-  height: 170px;
+  height: fit-content;
 }
 .list-class {
   margin-top: 5px;
@@ -19,14 +19,14 @@
   list-style: none;
 }
 .list-title {
+  font-size: 15px;
+  font-weight: 200;
   cursor: pointer;
   padding: 2px;
   margin-bottom: 1px;
 }
 hr {
-  font-size: 15px;
-  font-weight: 300;
-  color: inherit;
+  color: rgb(169, 171, 173);
   opacity: 0.25;
   margin: 0px;
   border: 0;
