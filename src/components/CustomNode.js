@@ -55,6 +55,7 @@ const CustomNode = (props) => {
           style={{
             color: "white",
             marginRight: "10px",
+            marginTop: "-2px",
           }}
         >
           {props.NodeIcon}

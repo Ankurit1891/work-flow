@@ -34,7 +34,8 @@ const RightBar = (props) => {
         style={{
           display: "flex",
           justifyContent: "center",
-          alignItems: "center",
+          width: "fit-content",
+          height: "fit-content",
         }}
       >
         <motion.div

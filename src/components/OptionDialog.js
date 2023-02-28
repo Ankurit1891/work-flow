@@ -3,85 +3,65 @@ import { motion } from "framer-motion";
 
 import "./OptionDialog.css";
 const OptionDialog = (props) => {
-  const onClickHandler = () => {
+  const onAddDefaultHandler = () => {
     props.setOpenDialog(false);
-    props.AddNode();
+    props.AddNode("default", "#ff7c7c", "NODE");
+  };
+  const onAddStartHandler = () => {
+    props.setOpenDialog(false);
+    props.AddNode("input", "#656ac6", "START");
   };
 
+  const onAddTerminateHandler = () => {
+    props.setOpenDialog(false);
+    props.AddNode("output", "#000000", "TERMINATE");
+  };
   return (
     <div className="main-box" style={{ top: props.xCords, left: props.yCords }}>
       <ul className="list-class">
         <motion.li
+          initial={{ fontWeight: 100 }} // Set initial font weight to 400
+          animate={{ fontWeight: 400 }} // Set animate font weight to 700
+          transition={{ duration: 0.1 }}
           whileHover={{
             scale: 1.1,
             originX: 0,
-            color: "white",
-            fontWeight: "400",
+            color: "#ffffff",
           }}
           className="list-title"
-          onClick={onClickHandler}
+          onClick={onAddStartHandler}
         >
-          Add Node
+          Add Start
         </motion.li>
         <hr />
         <motion.li
+          initial={{ fontWeight: 100 }} // Set initial font weight to 400
+          animate={{ fontWeight: 400 }} // Set animate font weight to 700
+          transition={{ duration: 0.1 }}
           whileHover={{
             scale: 1.1,
             originX: 0,
-            color: "white",
-            fontWeight: "400",
+            color: "#ffffff",
           }}
           className="list-title"
-          onClick={() => {
-            props.setOpenDialog(false);
-          }}
+          onClick={onAddDefaultHandler}
         >
-          2nd Option...
+          Add State
         </motion.li>
         <hr />
         <motion.li
+          initial={{ fontWeight: 100 }} // Set initial font weight to 400
+          animate={{ fontWeight: 400 }} // Set animate font weight to 700
+          transition={{ duration: 0.1 }}
           whileHover={{
             scale: 1.1,
             originX: 0,
-            color: "white",
-            fontWeight: "400",
+            color: "#ffffff",
           }}
           className="list-title"
-          onClick={() => {
-            props.setOpenDialog(false);
-          }}
+          onClick={onAddTerminateHandler}
         >
-          3rd Option...
-        </motion.li>
-        <hr />
-        <motion.li
-          whileHover={{
-            scale: 1.1,
-            originX: 0,
-            color: "white",
-            fontWeight: "400",
-          }}
-          className="list-title"
-          onClick={() => {
-            props.setOpenDialog(false);
-          }}
-        >
-          4th Option...
-        </motion.li>
-        <hr />
-        <motion.li
-          whileHover={{
-            scale: 1.1,
-            originX: 0,
-            color: "white",
-            fontWeight: "400",
-          }}
-          className="list-title"
-          onClick={() => {
-            props.setOpenDialog(false);
-          }}
-        >
-          5th Option...
+          Add Terminate
         </motion.li>
       </ul>
     </div>

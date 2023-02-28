@@ -28,9 +28,9 @@ const Canvas = (props) => {
     setkey(key);
   };
 
-  // window.oncontextmenu = function (e) {
-  //   e.preventDefault();
-  // };
+  window.oncontextmenu = function (e) {
+    e.preventDefault();
+  };
   return (
     <div className="canvas-class">
       <motion.div

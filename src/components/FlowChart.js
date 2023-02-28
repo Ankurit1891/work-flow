@@ -25,10 +25,12 @@ import NodeForm from "./NodeForm";
 import EdgeModalForm from "./EdgeModalForm";
 import html2canvas from "html2canvas";
 import OptionDialog from "./OptionDialog";
+import NodeFormModal from "./NodeFormModal";
 
 const FlowChart = (props) => {
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [selectedEdge, setSelectedEdge] = useState(null);
+  const [selectedNode, setSelectedNode] = useState(null);
   const [nodeObject, setNodeObject] = useState({
     xCords: 0,
     yCords: 0,
@@ -209,13 +211,9 @@ const FlowChart = (props) => {
   //function on edge right click
 
   const onEdgeRightClick = (event, edge) => {
-    // console.log(edge.selected);
-    // edge.selected = false;
-    // console.log(edge.selected);
     event.stopPropagation();
     event.preventDefault();
     setSelectedEdge(edge);
-    // setSelectedEdge({ selected: false });
     setEdgeOpenFormModal(true);
   };
 
@@ -228,12 +226,6 @@ const FlowChart = (props) => {
   const onEndeMouseLeave = (event, edge) => {};
 
   // on node right click
-
-  const onNodeRightClick = (event, node) => {
-    event.stopPropagation();
-    setOpenModal(true);
-    event.preventDefault();
-  };
 
   // mini-map node colour
 
@@ -270,35 +262,46 @@ const FlowChart = (props) => {
       return !e;
     });
   };
-  const AddNode = () => {
+  const AddNode = (type, color, name) => {
     const xPos = nodes[nodes.length - 1].position.x;
-    const yPos = nodes[nodes.length - 1].position.y + 100;
+    const yPos = nodes[nodes.length - 1].position.y + 120;
+
     onAddNode(
       xPos,
       yPos,
-      "newKey",
-      "grey",
+      "",
+      color,
       "100px",
       "10px",
       <AiOutlineFontSize />,
-      "Node Name",
-      "type - Custom",
-      "desc"
+      name,
+      type,
+      ""
     );
   };
-  // // rendering the component in react flow
-  // function handleKeyDown(event) {
-  //   if (
-  //     event.key === "Enter" &&
-  //     event.target.classList.contains("react-flow")
-  //   ) {
-  //     event.stopPropagation();
-  //     console.log("Enter key pressed!");
-  //   }
-  // }
 
-  // // Register the event listener on the document object
-  // document.addEventListener("keydown", handleKeyDown);
+  const onAlterNode = (text, desc, id) => {
+    selectedNode.name = text;
+    selectedNode.description = desc;
+    console.log(text, desc, id);
+    let newNodes = [];
+    nodes.forEach((node, index) => {
+      if (node.id !== id) {
+        console.log(node.id);
+        newNodes.push(node);
+      }
+    });
+    newNodes.push(selectedNode);
+    setNodes(newNodes);
+    console.log(nodes);
+  };
+
+  const onNodeRightClick = (event, node) => {
+    event.stopPropagation();
+    event.preventDefault();
+    setSelectedNode(node);
+    setOpenModal(true);
+  };
 
   const onAlterEdge = (text, desc, id) => {
     selectedEdge.label = text;
@@ -366,7 +369,13 @@ const FlowChart = (props) => {
         </motion.div>
       )}
       {/* {//Opening the form modal for nodes on right click} */}
-      {openModal && <Modal setOpenModal={setOpenModal} />}
+      {openModal && (
+        <NodeFormModal
+          node={selectedNode}
+          setOpenModal={setOpenModal}
+          alterNode={onAlterNode}
+        />
+      )}
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -387,9 +396,12 @@ const FlowChart = (props) => {
       >
         <Background variant="dots" gap={10} size={0.3} color="white" />
         <MiniMap nodeColor={nodeColor} />
-        <Controls>
+        <Controls
+          position="top-right"
+          style={{ display: "flex", flexDirection: "row", padding: "2px" }}
+        >
           <ControlButton
-            style={{ width: "wrap-content" }}
+            style={{ width: "wrap-content", padding: "5px" }}
             onClick={() => {
               edges.map((e) => {
                 return console.log(e);
@@ -409,7 +421,7 @@ const FlowChart = (props) => {
             <BsSave2 />
           </ControlButton>
         </Controls>
-        <Panel position="top-left">
+        {/* <Panel position="top-left">
           <div className="panel__background-color">
             <span>Background Color</span>
             <input
@@ -419,7 +431,7 @@ const FlowChart = (props) => {
               onChange={onColorChangeHandler}
             />
           </div>
-        </Panel>
+        </Panel> */}
       </ReactFlow>
     </div>
   );

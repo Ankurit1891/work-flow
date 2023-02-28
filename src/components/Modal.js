@@ -1,7 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Modal.css";
+import { TextField } from "@fluentui/react/lib/TextField";
 import { motion } from "framer-motion";
-function Modal({ setOpenModal }) {
+function Modal({ node, setOpenModal, alterNode }) {
+  const nodeFormAcceptHandler = () => {
+    setOpenModal(false);
+    alterNode(text, description, node.id);
+  };
+  const [text, setText] = useState("");
+  const [description, setDescription] = useState("");
+  const onChangeHandlerName = (e) => {
+    setText(e.target.value);
+  };
+  const onChangeHandlerDescription = (e) => {
+    setDescription(e.target.value);
+  };
+
   return (
     <div className="modalBackground">
       <motion.div
@@ -27,10 +41,32 @@ function Modal({ setOpenModal }) {
           </motion.button>
         </div>
         <div className="title">
-          <h1>Node Name</h1>
+          <h1>State</h1>
         </div>
-        <div className="body">
-          <p>Listing all the properties of the node</p>
+        <div
+          className="body"
+          style={{ display: "flex", flexDirection: "column" }}
+        >
+          <TextField
+            label="State   Name"
+            placeholder="Enter the State name"
+            onChange={onChangeHandlerName}
+            value={text}
+          />
+          <br />
+          <TextField
+            placeholder="Description..."
+            style={{
+              width: "fit-content",
+              minWidth: "400px",
+              minHeight: "70px",
+            }}
+            label="Description of the state"
+            onChange={onChangeHandlerDescription}
+            value={description}
+            multiline
+            autoAdjustHeight
+          />
         </div>
         <div className="footer">
           <motion.button
@@ -48,6 +84,20 @@ function Modal({ setOpenModal }) {
             id="cancelBtn"
           >
             Close
+          </motion.button>
+          <motion.button
+            initial={{
+              rotate: 0,
+            }}
+            transition={{ duration: 0.1 }}
+            whileHover={{
+              backgroundColor: "#0a0a0a",
+              scale: 1.1,
+            }}
+            onClick={nodeFormAcceptHandler}
+            id="acceptBtn"
+          >
+            Confirm
           </motion.button>
         </div>
       </motion.div>
