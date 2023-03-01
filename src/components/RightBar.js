@@ -36,6 +36,7 @@ const RightBar = (props) => {
           justifyContent: "center",
           width: "fit-content",
           height: "fit-content",
+          color: "black",
         }}
       >
         <motion.div
@@ -49,7 +50,11 @@ const RightBar = (props) => {
         >
           <motion.div
             transition={{ duration: 0.3, ease: "easeInOut" }}
-            style={{ color: "white", fontWeight: "bold", fontSize: "20px" }}
+            style={{
+              color: props.theme ? "#000000" : "#ffffff",
+              fontWeight: "bold",
+              fontSize: "20px",
+            }}
           >
             {isOpen}
           </motion.div>
@@ -63,6 +68,7 @@ const RightBar = (props) => {
               <div className="draggable-object" key={node.key}>
                 <div>
                   <CustomNode
+                    theme={props.theme}
                     NodeType={node.nodeType}
                     NodeIcon={node.nodeIcon}
                     NodeName={node.nodeName}

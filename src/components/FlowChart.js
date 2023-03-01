@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import "reactflow/dist/style.css";
 import { BsSave2 } from "react-icons/bs";
 import { BsFillPrinterFill } from "react-icons/bs";
-import { AiOutlineFontSize } from "react-icons/ai";
 
 import ReactFlow, {
   Background,
@@ -12,22 +11,25 @@ import ReactFlow, {
   applyEdgeChanges,
   applyNodeChanges,
   MiniMap,
-  Panel,
   Controls,
 } from "reactflow";
 import "../App.css";
 import { nodeStyle } from "../node_data/RightBarNodeList";
 import { initialEdges, initialNodes } from "../node_data/NodeData";
 import CustomNode from "./CustomNode";
-import Modal from "./Modal";
 import { useDrop } from "react-dnd";
-import NodeForm from "./NodeForm";
+import NodeForm from "../extras/NodeForm";
 import EdgeModalForm from "./EdgeModalForm";
 import html2canvas from "html2canvas";
 import OptionDialog from "./OptionDialog";
 import NodeFormModal from "./NodeFormModal";
 
 const FlowChart = (props) => {
+  const [nodeValues, setnodeValues] = useState({
+    color: "",
+    icon: {},
+    type: "",
+  });
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
@@ -44,7 +46,7 @@ const FlowChart = (props) => {
     NodeDescription: "",
   });
   const [openDialog, setOpenDialog] = useState(false);
-  const [canvasColor, setCanvasColor] = useState("#232629");
+  // const [canvasColor, setCanvasColor] = useState("#232629");
   const [edges, setEdges] = useState(initialEdges);
   const [nodes, setNodes] = useState(initialNodes);
   const [openModal, setOpenModal] = useState(false);
@@ -55,10 +57,10 @@ const FlowChart = (props) => {
     accept: "div",
     drop: (item, monitor) => {
       console.log(isOver);
-      const dropCoordinates = monitor.getClientOffset();
+      // const dropCoordinates = monitor.getClientOffset();
       setNodeObject({
-        xCords: dropCoordinates.x - 150,
-        yCords: dropCoordinates.y - 180,
+        xCords: nodes[nodes.length - 1].position.x,
+        yCords: nodes[nodes.length - 1].position.y,
         nodeKey: item.nodeKey,
         nodeBackgroundColor: item.nodeBackgroundColor,
         nodeHeight: item.nodeHeight,
@@ -81,8 +83,6 @@ const FlowChart = (props) => {
 
   const onClickForm = (description) => {
     onAddNode(
-      nodeObject.xCords,
-      nodeObject.yCords,
       nodeObject.nodeKey,
       nodeObject.nodeBackgroundColor,
       nodeObject.nodeHeight,
@@ -95,8 +95,6 @@ const FlowChart = (props) => {
   };
 
   const onAddNode = (
-    x,
-    y,
     keyId,
     backgroundColor,
     height,
@@ -121,7 +119,6 @@ const FlowChart = (props) => {
     }
 
     const newNode = {
-      // id: `${uniqueId()}`,
       id: `${nodes.length}`,
       name: name,
       description: description,
@@ -146,7 +143,10 @@ const FlowChart = (props) => {
         ),
         style: { nodeStyle },
       },
-      position: { x: x, y: y },
+      position: {
+        x: nodes[nodes.length - 1].position.x,
+        y: nodes[nodes.length - 1].position.y + 90,
+      },
     };
     setNodes((prevNode) => {
       return [...prevNode, newNode];
@@ -163,19 +163,25 @@ const FlowChart = (props) => {
   const onConnect = (params) => {
     if (!openEdgeFormModal) {
       const { source, target } = params;
-      // onEdgeAdd(source,target);
+      // params.connection.edge = {
+      //   ...params.connection.edge,
+      //   arrowHeadColor: "red", // Set the arrowhead color to red
+      //   style: { stroke: "blue" }, // Set the line color to blue
+      // };
       const newEdge = {
         id: `e${source}->${target}`,
         source: source,
         target: target,
         strokeWidth: 3,
-        color: "black",
+
+        // style: { stroke: "grey" },
+        // color: "black",
         type: "smoothstep",
         className: "smoothstep",
         animated: false,
         orient: "auto",
-        style: { width: "10px", border: "2px solid white" },
-        labelBgStyle: { fill: "#232629" },
+        // style: { width: "10px", border: "2px solid white" },
+        labelBgStyle: { fill: "grey" },
 
         labelStyle: {
           fill: "white",
@@ -186,6 +192,7 @@ const FlowChart = (props) => {
         description: "",
         markerEnd: {
           type: MarkerType.ArrowClosed,
+          color: "grey",
         },
       };
       setEdges([...edges, newEdge]);
@@ -235,9 +242,9 @@ const FlowChart = (props) => {
 
   // changing the colour of the canvas
 
-  const onColorChangeHandler = (e) => {
-    setCanvasColor(e.target.value);
-  };
+  // const onColorChangeHandler = (e) => {
+  //   setCanvasColor(e.target.value);
+  // };
 
   // exporting the workflow to chart
 
@@ -262,38 +269,60 @@ const FlowChart = (props) => {
       return !e;
     });
   };
-  const AddNode = (type, color, name) => {
-    const xPos = nodes[nodes.length - 1].position.x;
-    const yPos = nodes[nodes.length - 1].position.y + 120;
 
+  // const AddNode = (type, color, name) => {
+  //   const xPos = nodes[nodes.length].position.x;
+  //   const yPos = nodes[nodes.length].position.y + 120;
+
+  //   onAddNode(
+  //     xPos,
+  //     yPos,
+  //     "",
+  //     color,
+  //     "100px",
+  //     "10px",
+  //     <AiOutlineFontSize />,
+  //     name,
+  //     type,
+  //     ""
+  //   );
+  // };
+
+  const onAlterNode = (text, desc) => {
     onAddNode(
-      xPos,
-      yPos,
-      "",
-      color,
-      "100px",
-      "10px",
-      <AiOutlineFontSize />,
-      name,
-      type,
-      ""
+      1212,
+      nodeValues.color,
+      "wrap",
+      "-5px",
+      nodeValues.icon,
+      text,
+      nodeValues.type,
+      desc
     );
-  };
+    // selectedNode.name = text;
+    // selectedNode.description = desc;
+    // console.log(text, desc, id);
+    // let newNodes = [];
+    // nodes.forEach((node, index) => {
+    //   if (node.id !== id) {
+    //     console.log(node.id);
+    //     newNodes.push(node);
+    //   } else {
+    //     node.description = desc;
+    //     newNodes.push(node);
+    //   }
+    // });
+    // console.log(nodes);
+    // setNodes(() => {
+    //   return [...newNodes];
+    // });
 
-  const onAlterNode = (text, desc, id) => {
-    selectedNode.name = text;
-    selectedNode.description = desc;
-    console.log(text, desc, id);
-    let newNodes = [];
-    nodes.forEach((node, index) => {
-      if (node.id !== id) {
-        console.log(node.id);
-        newNodes.push(node);
-      }
-    });
-    newNodes.push(selectedNode);
-    setNodes(newNodes);
-    console.log(nodes);
+    // console.log(nodes);
+    // // newNodes.push(selectedNode);
+    // setNodes((prevNode) => {
+    //   return [...prevNode, selectedNode];
+    // });
+    // console.log(nodes);
   };
 
   const onNodeRightClick = (event, node) => {
@@ -315,7 +344,15 @@ const FlowChart = (props) => {
     newEdges.push(selectedEdge);
     setEdges(newEdges);
   };
-
+  // const setNodeValues = (color, icon, type) => {
+  //   setnodeValues(color, icon, type);
+  //   setOpenModal(true);
+  // };
+  const assignNodeValues = (color, icon, type) => {
+    console.log(color, icon, type);
+    setnodeValues({ color: color, icon: icon, type: type });
+    setOpenModal(true);
+  };
   return (
     <div
       ref={drop}
@@ -323,16 +360,18 @@ const FlowChart = (props) => {
         position: "relative",
         width: "100%",
         height: "100%",
-        backgroundColor: canvasColor,
+        backgroundColor: props.theme ? "#e1dcdc" : "#262627",
         borderRadius: "7px",
-        border: "1px solid grey",
+        border: props.theme ? "1px solid black" : "1px solid grey",
       }}
     >
+      {/* opens a dialog box when canvas right click is done */}
       {openDialog && (
         <OptionDialog
+          theme={props.theme}
           xCords={coords.x}
           yCords={coords.y}
-          AddNode={AddNode}
+          assignNodeValues={assignNodeValues}
           setOpenDialog={setOpenDialog}
         ></OptionDialog>
       )}
@@ -372,6 +411,7 @@ const FlowChart = (props) => {
       {openModal && (
         <NodeFormModal
           node={selectedNode}
+          nodeData={nodeValues}
           setOpenModal={setOpenModal}
           alterNode={onAlterNode}
         />
@@ -394,7 +434,12 @@ const FlowChart = (props) => {
         onContextMenu={onCanvasRightClick}
         fitView
       >
-        <Background variant="dots" gap={10} size={0.3} color="white" />
+        <Background
+          variant="dots"
+          gap={10}
+          size={0.3}
+          color={props.theme ? "black" : "white"}
+        />
         <MiniMap nodeColor={nodeColor} />
         <Controls
           position="top-right"

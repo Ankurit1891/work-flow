@@ -25,7 +25,16 @@ const CustomNode = (props) => {
       isDragging: !!monitor.isDragging(),
     }),
   }));
-
+  let border = "";
+  if (isDragging === true && props.theme === true) {
+    border = "5px solid black";
+  } else if (isDragging === true && props.theme === false) {
+    border = "5px solid white";
+  } else if (isDragging === false && props.theme === true) {
+    border = "1px solid black";
+  } else {
+    border = "1px solid white";
+  }
   return (
     <motion.div
       ref={drag}
@@ -42,7 +51,7 @@ const CustomNode = (props) => {
         height: isDragging ? "100px" : "wrap",
         width: props.parent === "rightBar" ? "180px" : "wrap",
         maxWidth: "170px",
-        border: isDragging ? "5px solid white" : "1px solid white",
+        border: border,
         backgroundColor: props.NodebackgroundColor,
         borderRadius: isDragging ? "0px" : "5px",
         margin: props.parent === "rightBar" ? props.Nodemargin : "-5px",

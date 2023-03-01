@@ -17,10 +17,11 @@ import {
   IconButton,
 } from "@fluentui/react/lib/Button";
 
-const NodeFormModal = ({ node, setOpenModal, alterNode }) => {
+const NodeFormModal = ({ nodeData, setOpenModal, alterNode }) => {
   const nodeFormAcceptHandler = () => {
     setOpenModal(false);
-    alterNode(text, description, node.id);
+    alterNode(text, description);
+    console.log(nodeData.icon);
   };
   const [text, setText] = useState("");
   const [description, setDescription] = useState("");
@@ -34,17 +35,6 @@ const NodeFormModal = ({ node, setOpenModal, alterNode }) => {
   const buttonClasses = buttonStyles();
   const inputClasses = useStyles();
 
-  // Normally the drag options would be in a constant, but here the toggle can modify keepInBounds
-  // const dragOptions = React.useMemo(
-  //   () => ({
-  //     moveMenuItemText: "Move",
-  //     closeMenuItemText: "Close",
-  //     menu: ContextualMenu,
-  //     keepInBounds,
-  //     dragHandleSelector: ".ms-Modal-scrollableContent > div:first-child",
-  //   }),
-  //   [keepInBounds]
-  // );
   initializeIcons();
   const titleId = useId("title");
 
