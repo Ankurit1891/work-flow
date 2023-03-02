@@ -270,24 +270,6 @@ const FlowChart = (props) => {
     });
   };
 
-  // const AddNode = (type, color, name) => {
-  //   const xPos = nodes[nodes.length].position.x;
-  //   const yPos = nodes[nodes.length].position.y + 120;
-
-  //   onAddNode(
-  //     xPos,
-  //     yPos,
-  //     "",
-  //     color,
-  //     "100px",
-  //     "10px",
-  //     <AiOutlineFontSize />,
-  //     name,
-  //     type,
-  //     ""
-  //   );
-  // };
-
   const onAlterNode = (text, desc) => {
     onAddNode(
       1212,
@@ -299,37 +281,13 @@ const FlowChart = (props) => {
       nodeValues.type,
       desc
     );
-    // selectedNode.name = text;
-    // selectedNode.description = desc;
-    // console.log(text, desc, id);
-    // let newNodes = [];
-    // nodes.forEach((node, index) => {
-    //   if (node.id !== id) {
-    //     console.log(node.id);
-    //     newNodes.push(node);
-    //   } else {
-    //     node.description = desc;
-    //     newNodes.push(node);
-    //   }
-    // });
-    // console.log(nodes);
-    // setNodes(() => {
-    //   return [...newNodes];
-    // });
-
-    // console.log(nodes);
-    // // newNodes.push(selectedNode);
-    // setNodes((prevNode) => {
-    //   return [...prevNode, selectedNode];
-    // });
-    // console.log(nodes);
   };
 
   const onNodeRightClick = (event, node) => {
     event.stopPropagation();
     event.preventDefault();
     setSelectedNode(node);
-    setOpenModal(true);
+    console.log(selectedNode);
   };
 
   const onAlterEdge = (text, desc, id) => {

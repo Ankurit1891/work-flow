@@ -1,130 +1,11 @@
-// import React, { useState } from "react";
-// import "./EdgeModalForm.css";
-// import "./NodeForm.css";
-// import { TextField } from "@fluentui/react/lib/TextField";
 import { motion } from "framer-motion";
-
-// const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge }) => {
-//   const edgeFormAcceptHandler = () => {
-//     setEdgeOpenFormModal(false);
-//     alterEdge(text, description, edge.id);
-//   };
-
-//   const [text, setText] = useState("");
-//   const [description, setDescription] = useState("");
-//   const onChangeHandlerName = (e) => {
-//     setText(e.target.value);
-//   };
-//   const onChangeHandlerDescription = (e) => {
-//     setDescription(e.target.value);
-//   };
-
-//   return (
-//     <div className="modalBackground">
-//       <motion.div
-//         className="modalContainer"
-//         initial={{ opacity: 0 }}
-//         animate={{ opacity: 1 }}
-//         exit={{ opacity: 0 }}
-//         transition={{ duration: 0.3 }}
-//       >
-//         <div className="titleCloseBtn">
-//           <motion.button
-//             initial={{
-//               rotate: 0,
-//             }}
-//             whileHover={{
-//               rotate: +90,
-//             }}
-//             onClick={() => {
-//               setEdgeOpenFormModal(false);
-//             }}
-//           >
-//             ❌
-//           </motion.button>
-//         </div>
-//         <div className="heading-container">
-//           <span
-//             className="icon-container"
-//             // style={{ color: nodeBackgroundColor }}
-//           >
-//             {/* {nodeIcon} */}
-//           </span>
-//           <span
-//             className="text-container"
-//             // style={{ boxShadow: `2px 2px 10px ${nodeBackgroundColor}` }}
-//           >
-//             {/* <i>{nodeName}</i> */}
-//             Transition
-//           </span>
-//         </div>
-//         <div
-//           className="body"
-//           style={{ display: "flex", flexDirection: "column" }}
-//         >
-//           <TextField
-//             label="transition Name"
-//             placeholder="Enter the transition name"
-//             onChange={onChangeHandlerName}
-//             value={text}
-//           />
-//           <br />
-//           <TextField
-//             placeholder="Description..."
-//             style={{
-//               width: "fit-content",
-//               minWidth: "400px",
-//               minHeight: "70px",
-//             }}
-//             label="Description of the transition"
-//             onChange={onChangeHandlerDescription}
-//             value={description}
-//             multiline
-//             autoAdjustHeight
-//           />
-//           <div className="footer">
-//             <motion.button
-//               initial={{
-//                 rotate: 0,
-//               }}
-//               transition={{ duration: 0.1 }}
-//               whileHover={{
-//                 backgroundColor: "#0a0a0a",
-//                 scale: 1.1,
-//               }}
-//               onClick={() => {
-//                 setEdgeOpenFormModal(false);
-//               }}
-//               id="cancelBtn"
-//             >
-//               Close
-//             </motion.button>
-//             <motion.button
-//               initial={{
-//                 rotate: 0,
-//               }}
-//               transition={{ duration: 0.1 }}
-//               whileHover={{
-//                 backgroundColor: "#0a0a0a",
-//                 scale: 1.1,
-//               }}
-//               onClick={edgeFormAcceptHandler}
-//               id="acceptBtn"
-//             >
-//               Confirm
-//             </motion.button>
-//           </div>
-//         </div>
-//       </motion.div>
-//     </div>
-//   );
-// };
-
-// export default EdgeModalForm;
-
+import { Label } from "@fluentui/react-components";
 import React, { useState } from "react";
-
 import { TextField } from "@fluentui/react/lib/TextField";
+import { Dropdown } from "@fluentui/react/lib/Dropdown";
+import { AddCircle24Filled } from "@fluentui/react-icons";
+import { DismissCircle24Filled } from "@fluentui/react-icons";
+
 import {
   makeStyles,
   getTheme,
@@ -139,19 +20,32 @@ import {
 } from "@fluentui/react/lib/Button";
 
 const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge }) => {
+  const [counter, setcounter] = useState([]);
   const edgeFormAcceptHandler = () => {
     setEdgeOpenFormModal(false);
     alterEdge(text, description, edge.id);
   };
 
+  const [showButton, setshowButton] = useState(true);
   const [text, setText] = useState("");
   const [description, setDescription] = useState("");
   const onChangeHandlerName = (e) => {
     setText(e.target.value);
   };
-  const onChangeHandlerDescription = (e) => {
-    setDescription(e.target.value);
+  // const onChangeHandlerDescription = (e) => {
+  //   setDescription(e.target.value);
+  // };
+
+  const dropdownStyles = {
+    dropdown: { width: 300, marginRight: "10px" },
   };
+
+  const options = [
+    { key: "CODE1", text: "Code 1" },
+    { key: "CODE2", text: "Code 2" },
+    { key: "CODE3", text: "Code 3" },
+    { key: "CODE4", text: "Code 4" },
+  ];
 
   const buttonClasses = buttonStyles();
   const inputClasses = useStyles();
@@ -178,24 +72,202 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge }) => {
             }}
           />
         </div>
+
         <div className={contentStyles.body}>
-          <TextField
-            onChange={onChangeHandlerName}
-            value={text}
-            className={inputClasses.stateName}
-            label="Transition Name"
-            style={{
-              fontWeight: "400",
-            }}
-            placeholder="Enter transition name  here"
-          />
-          <TextField
-            onChange={onChangeHandlerDescription}
-            value={description}
-            className={inputClasses.stateDescription}
-            label="Transition Description"
-            placeholder="Enter transition description  here"
-          />
+          <div>
+            <Label style={labelStyle}>Transition Name</Label>
+            <TextField
+              onChange={onChangeHandlerName}
+              value={text}
+              className={inputClasses.stateName}
+              style={{
+                fontWeight: "400",
+              }}
+              placeholder="Enter transition name  here"
+            />
+            <Label style={labelStyle}>System Event Code</Label>
+            <Dropdown
+              placeholder="Select an option"
+              options={options}
+              styles={dropdownStyles}
+            />
+          </div>
+          <div>
+            {counter[0] && (
+              <motion.div
+                style={motionDivStyle}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 1 }}
+              >
+                <Label style={labelStyle}>Pre-Transition Action</Label>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Dropdown
+                    placeholder="Select an option"
+                    // label="Pre-Transition Action"
+                    options={options}
+                    styles={dropdownStyles}
+                  />
+                  <DismissCircle24Filled
+                    primaryFill="#a90101"
+                    onClick={() => {
+                      if (counter.length === 1) {
+                        setshowButton(true);
+                        setcounter([]);
+                      } else if (counter.length === 2) {
+                        if (counter.includes(2)) {
+                          setshowButton(true);
+                          setcounter([2]);
+                        } else if (counter.includes(3)) {
+                          setshowButton(true);
+                          setcounter([3]);
+                        }
+                      } else if (counter.length === 3) {
+                        setshowButton(true);
+                        setcounter([2, 3]);
+                      }
+                    }}
+                  />
+                </div>
+              </motion.div>
+            )}
+            {counter[1] && (
+              <motion.div
+                style={motionDivStyle}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 1 }}
+              >
+                <Label style={labelStyle}>Post-Transition Action</Label>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Dropdown
+                    placeholder="Select an option"
+                    options={options}
+                    styles={dropdownStyles}
+                  />
+                  <DismissCircle24Filled
+                    primaryFill="#a90101"
+                    onClick={() => {
+                      if (counter.length === 1) {
+                        setshowButton(true);
+                        setcounter([]);
+                      } else if (counter.length === 2) {
+                        if (counter.includes(1)) {
+                          setshowButton(true);
+                          setcounter([1]);
+                        } else if (counter.includes(3)) {
+                          setshowButton(true);
+                          setcounter([3]);
+                        }
+                      } else if (counter.length === 3) {
+                        setshowButton(true);
+                        setcounter([1, 3]);
+                      }
+                    }}
+                  />
+                </div>
+              </motion.div>
+            )}
+            {counter[2] && (
+              <motion.div
+                style={motionDivStyle}
+                initial={{ opacity: 0.5 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 1 }}
+              >
+                <Label style={labelStyle}>Conditional Next State</Label>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <Dropdown
+                    placeholder="Select an option"
+                    options={options}
+                    styles={dropdownStyles}
+                  />
+                  <DismissCircle24Filled
+                    primaryFill="#a90101"
+                    onClick={() => {
+                      if (counter.length === 1) {
+                        setshowButton(true);
+                        setcounter([]);
+                      } else if (counter.length === 2) {
+                        if (counter.includes(1)) {
+                          setshowButton(true);
+                          setcounter([1]);
+                        } else if (counter.includes(2)) {
+                          setshowButton(true);
+                          setcounter([2]);
+                        }
+                      } else if (counter.length === 3) {
+                        setshowButton(true);
+                        setcounter([1, 2]);
+                      }
+                    }}
+                  />
+                </div>
+              </motion.div>
+            )}
+            {showButton && (
+              <span
+                style={{
+                  fontSize: "15px",
+                  marginLeft: "20px",
+                  marginRight: "10px",
+                }}
+              >
+                <i>Add additional info</i>
+              </span>
+            )}
+            {showButton && (
+              <AddCircle24Filled
+                primaryFill="#0a8cfa"
+                onClick={() => {
+                  if (counter.length === 0) {
+                    setcounter([1]);
+                  } else if (counter.length === 1) {
+                    if (counter.includes(1)) {
+                      setcounter([1, 2]);
+                    }
+                    if (counter.includes(2)) {
+                      setcounter([1, 2]);
+                    }
+                    if (counter.includes(3)) {
+                      setcounter([1, 3]);
+                    }
+                  } else if (counter.length === 2) {
+                    if (counter.includes(1) && counter.includes(2)) {
+                      setshowButton(false);
+                      setcounter([1, 2, 3]);
+                    }
+                    if (counter.includes(1) && counter.includes(3)) {
+                      setshowButton(false);
+                      setcounter([1, 2, 3]);
+                    }
+                    if (counter.includes(2) && counter.includes(3)) {
+                      setshowButton(false);
+                      setcounter([1, 2, 3]);
+                    }
+                  }
+                }}
+              />
+            )}
+          </div>
         </div>
         <div
           style={{ display: "flex", padding: "20px", justifyContent: "end" }}
@@ -222,7 +294,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge }) => {
 
 const useStyles = makeStyles({
   stateName: {
-    width: "200px",
+    width: "300px",
   },
   stateDescription: {
     width: "400px",
@@ -279,7 +351,8 @@ const contentStyles = mergeStyleSets({
     margin: "0",
   },
   body: {
-    flex: "4 4 auto",
+    display: "flex",
+    flexDirection: "row",
     padding: "0 24px 24px 24px",
     overflowY: "hidden",
     selectors: {
@@ -303,5 +376,24 @@ const iconButtonStyles = {
       color: "black",
     },
   },
+};
+const labelStyle = {
+  marginTop: "10px",
+  fontSize: "14px",
+  fontWeight: "600",
+  color: "rgb(50, 49, 48)",
+  boxSizing: " border - box",
+  boxShadow: "none",
+  margin: "0px",
+  display: "inline - block",
+  padding: "5px 0px",
+  overflowWrap: "break-word",
+};
+const motionDivStyle = {
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "flex-start",
+  alignItems: " flex-start",
+  marginTop: "10px",
 };
 export default EdgeModalForm;

@@ -3,21 +3,11 @@ import "../App.css";
 import { motion } from "framer-motion";
 import FlowChart from "../components/FlowChart";
 import RightBar from "../components/RightBar";
-import { makeStyles } from "@fluentui/react";
+
 import { Toggle } from "@fluentui/react/lib/Toggle";
 import { initialNodes, initialEdges } from "../node_data/NodeData";
 
 const Canvas = (props) => {
-  const useRadioStyle = makeStyles({
-    radio: {
-      display: "flex",
-      width: "200px",
-      flexDirection: "row",
-      fontSize: "10px",
-    },
-  });
-  const radioStyle = useRadioStyle();
-  // const [nodes, setNodes] = useState(initialNodes);
   const nodes = initialNodes;
   const [darkTheme, setdarkTheme] = useState(true);
   const [open, setOpen] = useState("true");
@@ -72,10 +62,7 @@ const Canvas = (props) => {
           >
             <Toggle
               style={{ padding: "2px" }}
-              // label="Enabled and checked"
               defaultUnChecked
-              // onText="On"
-              // offText="Off"
               onChange={_onChange}
             />
           </div>
