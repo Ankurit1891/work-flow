@@ -30,6 +30,7 @@ const FlowChart = (props) => {
     icon: {},
     type: "",
   });
+  const [nodeName, setnodeName] = useState("");
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
@@ -306,9 +307,9 @@ const FlowChart = (props) => {
   //   setnodeValues(color, icon, type);
   //   setOpenModal(true);
   // };
-  const assignNodeValues = (color, icon, type) => {
-    console.log(color, icon, type);
+  const assignNodeValues = (color, icon, type, text) => {
     setnodeValues({ color: color, icon: icon, type: type });
+    setnodeName(text);
     setOpenModal(true);
   };
   return (
@@ -359,6 +360,7 @@ const FlowChart = (props) => {
           transition={{ duration: 0.05 }}
         >
           <EdgeModalForm
+            theme={props.theme}
             edge={selectedEdge}
             alterEdge={onAlterEdge}
             setEdgeOpenFormModal={setEdgeOpenFormModal}
@@ -368,6 +370,8 @@ const FlowChart = (props) => {
       {/* {//Opening the form modal for nodes on right click} */}
       {openModal && (
         <NodeFormModal
+          name={nodeName}
+          theme={props.theme}
           node={selectedNode}
           nodeData={nodeValues}
           setOpenModal={setOpenModal}

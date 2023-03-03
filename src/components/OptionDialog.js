@@ -7,17 +7,22 @@ import "./OptionDialog.css";
 const OptionDialog = (props) => {
   const onAddStartHandler = () => {
     props.setOpenDialog((val) => !val);
-    props.assignNodeValues("#656ac6", <VscDebugStart />, "input");
+    props.assignNodeValues("#656ac6", <VscDebugStart />, "input", "Start");
   };
 
   const onAddDefaultHandler = () => {
     props.setOpenDialog((val) => !val);
-    props.assignNodeValues("#208d7c", <SiMobxstatetree />, "default");
+    props.assignNodeValues(
+      "#208d7c",
+      <SiMobxstatetree />,
+      "default",
+      "Continuation"
+    );
   };
 
   const onAddTerminateHandler = () => {
     props.setOpenDialog((val) => !val);
-    props.assignNodeValues("#000000", <GoCircleSlash />, "output");
+    props.assignNodeValues("#000000", <GoCircleSlash />, "output", "Finish");
   };
   return (
     <div
@@ -84,7 +89,7 @@ const OptionDialog = (props) => {
           className="list-title"
           onClick={onAddTerminateHandler}
         >
-          Add Terminate
+          Add Finish
         </motion.li>
       </ul>
     </div>

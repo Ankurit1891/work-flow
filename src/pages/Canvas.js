@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import "../App.css";
+
 import { motion } from "framer-motion";
 import FlowChart from "../components/FlowChart";
 import RightBar from "../components/RightBar";
-
 import { Toggle } from "@fluentui/react/lib/Toggle";
 import { initialNodes, initialEdges } from "../node_data/NodeData";
-
+import { ThemeProvider, Stack } from "@fluentui/react";
+import { lightTheme } from "../themes/lightTheme";
+import { darkTheme } from "../themes/darkTheme";
 const Canvas = (props) => {
   const nodes = initialNodes;
-  const [darkTheme, setdarkTheme] = useState(true);
+  const [isdarkTheme, setIsDarkTheme] = useState(true);
   const [open, setOpen] = useState("true");
 
   const [xx, setxx] = useState(null);
@@ -30,15 +32,20 @@ const Canvas = (props) => {
   };
 
   const _onChange = (ev) => {
-    setdarkTheme((prev) => {
+    setIsDarkTheme((prev) => {
       console.log(prev);
       return !prev;
     });
   };
+
+  // <ThemeProvider theme={isdarkTheme ? darkTheme : lightTheme}>
+  {
+    /* <Stack verticalFill> */
+  }
   return (
     <div
       className="canvas-class"
-      style={{ backgroundColor: darkTheme ? "#ffffff" : "#1a1f1f" }}
+      style={{ backgroundColor: isdarkTheme ? "#ffffff" : "#1a1f1f" }}
     >
       <motion.div
         animate={{
@@ -49,7 +56,7 @@ const Canvas = (props) => {
         <div
           style={{
             height: "93%",
-            backgroundColor: darkTheme ? "#ffffff" : "#1a1f1f",
+            backgroundColor: isdarkTheme ? "#ffffff" : "#1a1f1f",
           }}
         >
           <div
@@ -57,7 +64,7 @@ const Canvas = (props) => {
               height: "50px",
               display: "flex",
               justifyContent: "flex-end",
-              backgroundColor: darkTheme ? "#ffffff" : "#1a1f1f",
+              backgroundColor: isdarkTheme ? "#ffffff" : "#1a1f1f",
             }}
           >
             <Toggle
@@ -72,7 +79,7 @@ const Canvas = (props) => {
             keyId={key}
             nodes={nodes}
             edges={initialEdges}
-            theme={darkTheme}
+            theme={isdarkTheme}
           ></FlowChart>
         </div>
       </motion.div>
@@ -87,16 +94,20 @@ const Canvas = (props) => {
           duration: "0.3",
         }}
         className="right-bar"
-        style={{ backgroundColor: darkTheme ? "#ffffff" : "#1a1f1f" }}
+        style={{ backgroundColor: isdarkTheme ? "#ffffff" : "#1a1f1f" }}
       >
         <RightBar
           onAddNewNode={onAddNode}
           setOpenRightBar={setOpen}
-          theme={darkTheme}
+          theme={isdarkTheme}
         ></RightBar>
       </motion.div>
     </div>
   );
 };
+{
+  /* </Stack> */
+}
+// </ThemeProvider>
 
 export default Canvas;
