@@ -38,76 +38,73 @@ const Canvas = (props) => {
     });
   };
 
-  // <ThemeProvider theme={isdarkTheme ? darkTheme : lightTheme}>
-  {
-    /* <Stack verticalFill> */
-  }
   return (
-    <div
-      className="canvas-class"
-      style={{ backgroundColor: isdarkTheme ? "#ffffff" : "#1a1f1f" }}
+    <ThemeProvider
+      theme={isdarkTheme ? lightTheme : darkTheme}
+      style={{ height: "100vh" }}
     >
-      <motion.div
-        animate={{
-          width: open ? "80%" : "94%",
-        }}
-        className="canvas"
+      <div
+        className="canvas-class"
+        // style={{ backgroundColor: isdarkTheme ? "#ffffff" : "#1a1f1f" }}
       >
-        <div
-          style={{
-            height: "93%",
-            backgroundColor: isdarkTheme ? "#ffffff" : "#1a1f1f",
+        <motion.div
+          animate={{
+            width: open ? "80%" : "94%",
           }}
+          className="canvas"
         >
           <div
             style={{
-              height: "50px",
-              display: "flex",
-              justifyContent: "flex-end",
-              backgroundColor: isdarkTheme ? "#ffffff" : "#1a1f1f",
+              height: "93%",
+              // backgroundColor: isdarkTheme ? "#ffffff" : "#1a1f1f",
             }}
           >
-            <Toggle
-              style={{ padding: "2px" }}
-              defaultUnChecked
-              onChange={_onChange}
-            />
+            <div
+              style={{
+                height: "50px",
+                display: "flex",
+                justifyContent: "flex-end",
+                // backgroundColor: isdarkTheme ? "#ffffff" : "#1a1f1f",
+              }}
+            >
+              <Toggle
+                style={{ padding: "2px" }}
+                defaultUnChecked
+                onChange={_onChange}
+              />
+            </div>
+            <FlowChart
+              cords={[xx, yy]}
+              styles={[height, margin, backgroundColor]}
+              keyId={key}
+              nodes={nodes}
+              edges={initialEdges}
+              theme={isdarkTheme}
+            ></FlowChart>
           </div>
-          <FlowChart
-            cords={[xx, yy]}
-            styles={[height, margin, backgroundColor]}
-            keyId={key}
-            nodes={nodes}
-            edges={initialEdges}
-            theme={isdarkTheme}
-          ></FlowChart>
-        </div>
-      </motion.div>
-      <motion.div
-        animate={{
-          height: open ? "100%" : "50px",
-          width: open ? "250px" : "50px",
-        }}
-        transition={{
-          type: "inirtia",
+        </motion.div>
+        <motion.div
+          animate={{
+            height: open ? "100%" : "50px",
+            width: open ? "250px" : "50px",
+          }}
+          transition={{
+            type: "inirtia",
 
-          duration: "0.3",
-        }}
-        className="right-bar"
-        style={{ backgroundColor: isdarkTheme ? "#ffffff" : "#1a1f1f" }}
-      >
-        <RightBar
-          onAddNewNode={onAddNode}
-          setOpenRightBar={setOpen}
-          theme={isdarkTheme}
-        ></RightBar>
-      </motion.div>
-    </div>
+            duration: "0.3",
+          }}
+          className="right-bar"
+          style={{ backgroundColor: isdarkTheme ? "#ffffff" : "#000000" }}
+        >
+          <RightBar
+            onAddNewNode={onAddNode}
+            setOpenRightBar={setOpen}
+            theme={isdarkTheme}
+          ></RightBar>
+        </motion.div>
+      </div>
+    </ThemeProvider>
   );
 };
-{
-  /* </Stack> */
-}
-// </ThemeProvider>
 
 export default Canvas;

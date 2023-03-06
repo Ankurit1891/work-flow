@@ -30,29 +30,31 @@ const OptionDialog = (props) => {
       style={{
         top: props.xCords - 50,
         left: props.yCords,
-        backgroundColor: props.theme ? "white" : "#3d3d3f",
-        border: props.theme ? "1px solid white" : "1px solid #3d3d3f",
-        boxShadow: props.theme
-          ? "1px 1px 4px -1px black"
-          : "1px 1px 4px -1px #ece5e5",
+        // backgroundColor: props.theme ? "white" : "#3d3d3f",
+        // border: props.theme ? "1px solid white" : "1px solid #3d3d3f",
+        // boxShadow: props.theme
+        //   ? "1px 1px 4px -1px black"
+        //   : "1px 1px 4px -1px #ece5e5",
       }}
     >
       <ul
         className="list-class"
-        style={{
-          backgroundColor: props.theme ? "white" : "#3d3d3f",
-          border: props.theme ? "1px solid white" : "1px solid #3d3d3f",
-        }}
+        style={
+          {
+            // backgroundColor: props.theme ? "white" : "#3d3d3f",
+            // border: props.theme ? "1px solid white" : "1px solid #3d3d3f",
+          }
+        }
       >
         <motion.li
           initial={{ fontWeight: 100 }} // Set initial font weight to 400
           animate={{ fontWeight: 400 }} // Set animate font weight to 700
           transition={{ duration: 0.1 }}
-          style={{ color: props.theme ? "black" : "white" }}
+          // style={{ color: props.theme ? "black" : "white" }}
           whileHover={{
             scale: 1.1,
             originX: 0,
-            color: props.theme ? "black" : "white",
+            // color: props.theme ? "black" : "white",
           }}
           className="list-title"
           onClick={onAddStartHandler}
@@ -64,11 +66,11 @@ const OptionDialog = (props) => {
           initial={{ fontWeight: 100 }} // Set initial font weight to 400
           animate={{ fontWeight: 400 }} // Set animate font weight to 700
           transition={{ duration: 0.1 }}
-          style={{ color: props.theme ? "black" : "white" }}
+          // style={{ color: props.theme ? "black" : "white" }}
           whileHover={{
             scale: 1.1,
             originX: 0,
-            color: props.theme ? "black" : "white",
+            // color: props.theme ? "black" : "white",
           }}
           className="list-title"
           onClick={onAddDefaultHandler}
@@ -80,11 +82,11 @@ const OptionDialog = (props) => {
           initial={{ fontWeight: 100 }} // Set initial font weight to 400
           animate={{ fontWeight: 400 }} // Set animate font weight to 700
           transition={{ duration: 0.1 }}
-          style={{ color: props.theme ? "black" : "white" }}
+          // style={{ color: props.theme ? "black" : "white" }}
           whileHover={{
             scale: 1.1,
             originX: 0,
-            color: props.theme ? "black" : "white",
+            // color: props.theme ? "black" : "white",
           }}
           className="list-title"
           onClick={onAddTerminateHandler}

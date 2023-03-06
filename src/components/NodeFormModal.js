@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-
-import { useId } from "@fluentui/react-hooks";
 import { Label } from "@fluentui/react-components";
-
 import { TextField } from "@fluentui/react/lib/TextField";
 import {
+  Stack,
   makeStyles,
   initializeIcons,
   mergeStyleSets,
@@ -32,11 +30,9 @@ const NodeFormModal = ({ nodeData, setOpenModal, alterNode, theme, name }) => {
     setDescription(e.target.value);
   };
 
-  const buttonClasses = buttonStyles();
   const inputClasses = useStyles();
 
   initializeIcons();
-  const titleId = useId("title");
   const labelStyle = {
     marginTop: "10px",
     fontSize: "14px",
@@ -77,7 +73,6 @@ const NodeFormModal = ({ nodeData, setOpenModal, alterNode, theme, name }) => {
       margin: "0",
     },
     body: {
-      // borderLeft: "1px solid grey",
       flex: "4 4 auto",
       padding: "0 24px 24px 24px",
       overflowY: "hidden",
@@ -89,24 +84,9 @@ const NodeFormModal = ({ nodeData, setOpenModal, alterNode, theme, name }) => {
     },
   });
 
-  // const iconButtonStyles = {
-  //   root: {
-  //     color: "black",
-  //     fontWeight: "100",
-  //     backgroundColor: "white",
-  //     marginLeft: "auto",
-  //     marginTop: "4px",
-  //     marginRight: "2px",
-  //     "&:hover": {
-  //       backgroundColor: "grey",
-  //       color: "black",
-  //     },
-  //   },
-  // };
   return (
     <div>
       <Modal
-        titleAriaId={titleId}
         isOpen={true}
         onDismiss={() => {
           setOpenModal(false);
@@ -114,13 +94,9 @@ const NodeFormModal = ({ nodeData, setOpenModal, alterNode, theme, name }) => {
         isBlocking={false}
         containerClassName={contentStyles.container}
       >
-        <div
-          className={contentStyles.header}
-          style={{ backgroundColor: theme ? "white" : "#1d1c1c" }}
-        >
+        <div className={contentStyles.header}>
           <h2
             className={contentStyles.heading}
-            id={titleId}
             style={{ color: theme ? "black" : "white" }}
           >
             State : {name}
@@ -129,29 +105,12 @@ const NodeFormModal = ({ nodeData, setOpenModal, alterNode, theme, name }) => {
             iconProps={{ iconName: "Cancel" }}
             title="Close"
             ariaLabel="Close"
-            style={{
-              backgroundColor: theme ? "white" : "#1d1c1c",
-              color: theme ? "black" : "white",
-              "&:hover": { backgroundColor: "grey" },
-            }}
             onClick={() => {
               setOpenModal(false);
             }}
           />
-          {/* <IconButton
-            styles={iconButtonStyles.root}
-            iconProps={{ iconName: "Cancel" }}
-            title="Cancel"
-            ariaLabel="Cancel"
-            onClick={() => {
-              setOpenModal(false);
-            }}
-          /> */}
         </div>
-        <div
-          className={contentStyles.body}
-          style={{ backgroundColor: theme ? "white" : "#1d1c1c" }}
-        >
+        <div className={contentStyles.body}>
           <Label style={labelStyle}>State Name</Label>
           <TextField
             onChange={onChangeHandlerName}
@@ -159,36 +118,25 @@ const NodeFormModal = ({ nodeData, setOpenModal, alterNode, theme, name }) => {
             className={inputClasses.stateName}
             style={{
               fontWeight: "400",
-              backgroundColor: theme ? "whitesmoke" : "#1d1c1c",
-              color: theme ? "black" : "white",
             }}
             placeholder="Enter state name  here"
           />
-          <Label style={labelStyle}>State Description</Label>
 
           <TextField
             onChange={onChangeHandlerDescription}
             value={description}
-            style={{
-              fontWeight: "400",
-              backgroundColor: theme ? "whitesmoke" : "#1d1c1c",
-              color: theme ? "black" : "white",
-              // border: "2px solid blue",
-            }}
+            label="State Description"
             className={inputClasses.stateDescription}
             placeholder="Enter state description  here"
           />
         </div>
-        <div
-          style={{
-            display: "flex",
-            padding: "20px",
-            justifyContent: "end",
-            backgroundColor: theme ? "white" : "#1d1c1c",
-          }}
+        <Stack
+          tokens={{ childrenGap: 10 }}
+          horizontalAlign="end"
+          horizontal
+          styles={{ root: { padding: "10px" } }}
         >
           <DefaultButton
-            className={buttonClasses.cancel}
             text="CANCEL"
             onClick={() => {
               setOpenModal(false);
@@ -196,12 +144,11 @@ const NodeFormModal = ({ nodeData, setOpenModal, alterNode, theme, name }) => {
             allowDisabledFocus
           />
           <PrimaryButton
-            className={buttonClasses.confirm}
             text="CONFIRM"
             onClick={nodeFormAcceptHandler}
             allowDisabledFocus
           />
-        </div>
+        </Stack>
       </Modal>
     </div>
   );
@@ -215,30 +162,5 @@ const useStyles = makeStyles({
     width: "400px",
   },
 });
-
-const buttonStyles = makeStyles({
-  confirm: {
-    color: "#ffffff",
-    backgroundColor: "#0a8cfa",
-    marginLeft: "9px",
-    border: "1px solid black",
-    "&:hover": {
-      backgroundColor: "green", // Change the background color on hover to dark blue
-      color: "white", // Change the text color on hover to white
-    },
-  },
-  cancel: {
-    backgroundColor: "white",
-    color: "black",
-    marginLeft: "9px",
-    border: "1px solid black",
-    "&:hover": {
-      backgroundColor: "red", // Change the background color on hover to dark blue
-      color: "white", // Change the text color on hover to white
-    },
-  },
-});
-
-// const theme = getTheme();
 
 export default NodeFormModal;
