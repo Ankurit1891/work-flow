@@ -318,6 +318,7 @@ const FlowChart = (props) => {
       style={{
         position: "relative",
         width: "100%",
+        padding: "5px",
         height: "100%",
         backgroundColor: props.theme ? "#e1dcdc" : "#262627",
         borderRadius: "7px",
@@ -405,7 +406,12 @@ const FlowChart = (props) => {
         <MiniMap nodeColor={nodeColor} />
         <Controls
           position="top-right"
-          style={{ display: "flex", flexDirection: "row", padding: "2px" }}
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            padding: "2px",
+            // marginTop: "30px",
+          }}
         >
           <ControlButton
             style={{ width: "wrap-content", padding: "5px" }}

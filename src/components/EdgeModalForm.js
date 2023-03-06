@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
-
-import React, { useState } from "react";
+import event_code from "../api_data/event_code";
+import React, { useState, useEffect } from "react";
 import { TextField } from "@fluentui/react/lib/TextField";
 import { Dropdown } from "@fluentui/react/lib/Dropdown";
 import { AddCircle24Filled } from "@fluentui/react-icons";
@@ -11,9 +11,14 @@ import {
   FontWeights,
   Modal,
   Stack,
+  initializeIcons,
   Icon,
 } from "@fluentui/react";
-import { DefaultButton, PrimaryButton } from "@fluentui/react/lib/Button";
+import {
+  DefaultButton,
+  IconButton,
+  PrimaryButton,
+} from "@fluentui/react/lib/Button";
 
 const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
   const [counter, setcounter] = useState([]);
@@ -21,25 +26,50 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
     console.log(
       `pre trans => ${preTransitionValue} , post trans => ${postTransitionValue} , conditional state value => ${conditionalNextStateValue} , system event code => ${onChangeSystemEventCode}`
     );
+    setDescription("Dummy Data");
+    console.log(
+      `pre trans value=> ${postTransitionValueData} , post trans value=> ${preTransitionValueData} , conditional state value => ${conditionalNextStateValueData} , system event code => ${onChangeSystemEventCode}`
+    );
     setEdgeOpenFormModal(false);
     alterEdge(text, description, edge.id);
   };
+
+  // transtion value data 2ns drop down
   const [postTransitionValueData, setpostTransitionValueData] = useState();
   const [preTransitionValueData, setPreTransitionValueData] = useState();
   const [conditionalNextStateValueData, setConditionalNextStateValueData] =
     useState();
 
+  // system event code data value
   const [onChangeSystemEventCode, setOnChangeSystemEventCode] = useState();
+
+  // post transitional values 1st drop down
   const [postTransitionValue, setpostTransitionValue] = useState();
   const [preTransitionValue, setPreTransitionValue] = useState();
   const [conditionalNextStateValue, setConditionalNextStateValue] = useState();
 
+  // show button (additional)
   const [showButton, setshowButton] = useState(true);
+
+  //edge name
   const [text, setText] = useState("");
+
+  // edge description (not required)
   const [description, setDescription] = useState("");
+
+  // drop down system event code data
+  const [systemCodeData, setSystemCodeData] = useState([]);
+
+  //transition data dor 2ns drop down
+  const [preTransitionDropDownData, setPreTransitionDropDownData] = useState();
+  const [postTransitionDropDownData, setPostTransitionDropDownData] =
+    useState();
+
+  // on name chnage handler
   const onChangeHandlerName = (e) => {
     setText(e.target.value);
   };
+
   const light = "white";
   const dark = "#1d1c1c";
 
@@ -71,6 +101,8 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
         alignItems: "center",
         fontWeight: FontWeights.semibold,
         padding: "12px 12px 14px 24px",
+        flexDirection: "row",
+        justifyContent: "space-between",
       },
     ],
     heading: {
@@ -92,42 +124,40 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
     },
   });
 
+  // api call for system event codes
+  useEffect(() => {
+    fetch("/api/event_code")
+      .then((res) => res.json())
+      .then((json) => {
+        setSystemCodeData(json.codes);
+      });
+  }, []);
+
   const dropdownStyles = {
     root: {},
     dropdown: {
       width: "300px",
       marginRight: "10px",
-
-      "&:hover": {},
-    },
-    title: {
-      "&:hover": {},
     },
     dropdownItem: {
       "&:hover": {
-        border: "1px solid grey",
+        border: "0.1px solid grey",
       },
     },
   };
-  const options = [
-    { key: "CODE1", text: "Code 1" },
-    { key: "CODE2", text: "Code 2" },
-    { key: "CODE3", text: "Code 3" },
-    { key: "CODE4", text: "Code 4" },
-  ];
 
   const preTransitionData = [
-    { key: "101", text: "API Call" },
-    { key: "102", text: "Alert" },
-    { key: "103", text: "Hook" },
-    { key: "104", text: "Limit Utilization" },
+    { id: 1, key: "api_call", text: "API Call" },
+    { id: 2, key: "alert", text: "Alert" },
+    { id: 3, key: "hooks", text: "Hook" },
+    { id: 4, key: "limit_utilization", text: "Limit Utilization" },
   ];
 
   const postTransitionData = [
-    { key: "101", text: "API Call" },
-    { key: "102", text: "Alert" },
-    { key: "103", text: "Hook" },
-    { key: "104", text: "Limit Utilization" },
+    { id: 1, key: "api_call", text: "API Call" },
+    { id: 2, key: "alert", text: "Alert" },
+    { id: 3, key: "hooks", text: "Hook" },
+    { id: 4, key: "limit_utilization", text: "Limit Utilization" },
   ];
 
   const conditionalNextState = [
@@ -152,10 +182,32 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
   const onChangeConditionalNextStateHandler = (e, option) => {
     setConditionalNextStateValue(() => option.text);
   };
+
+  // on change pre transition handler 1st drop down
   const onChangePreTransitionHandler = (e, option) => {
+    let text = option.text;
+    let key = option.key;
+
+    const url = `/api/pre_transcition_action/${key}`;
+    fetch(url)
+      .then((res) => res.json())
+      .then((json) => {
+        setPreTransitionDropDownData(json.data);
+      });
     setPreTransitionValue(() => option.text);
   };
+
+  // on change post transition handler 1st drop down
   const onChangePostTransitionHandler = (e, option) => {
+    let text = option.text;
+    let key = option.key;
+
+    const url = `/api/post_transcition_action/${key}`;
+    fetch(url)
+      .then((res) => res.json())
+      .then((json) => {
+        setPostTransitionDropDownData(json.data);
+      });
     setpostTransitionValue(() => option.text);
   };
 
@@ -168,6 +220,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
   const onChangePostTransitionDataHandler = (e, option) => {
     setpostTransitionValueData(() => option.text);
   };
+  initializeIcons();
   return (
     <motion.div>
       <Modal
@@ -185,6 +238,14 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
           >
             TRANSITION
           </h2>
+          <IconButton
+            iconProps={{ iconName: "Cancel" }}
+            title="Close"
+            ariaLabel="Close"
+            onClick={() => {
+              setEdgeOpenFormModal(false);
+            }}
+          />
         </div>
         <div className={contentStyles.body}>
           <div>
@@ -202,7 +263,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
               onChange={onChangeSystemEventCodeHandler}
               label="System Event Code"
               placeholder="Select an option"
-              options={options}
+              options={systemCodeData}
               styles={dropdownStyles}
             />
           </div>
@@ -240,7 +301,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                           label={`${preTransitionValue} Data`}
                           onChange={onChangePreTransitionDataHandler}
                           placeholder="Select an option"
-                          options={preTransitionData}
+                          options={preTransitionDropDownData}
                           styles={dropdownStyles}
                         />
                       </div>
@@ -248,7 +309,12 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                   )}
                   <Icon
                     iconName="StatusErrorFull"
-                    styles={{ root: { fontSize: "20px" } }}
+                    styles={{
+                      root: {
+                        fontSize: "20px",
+                        color: theme ? "darkgrey" : "red",
+                      },
+                    }}
                     onClick={() => {
                       setPreTransitionValue();
                       setPreTransitionValueData();
@@ -319,7 +385,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                           label={`${postTransitionValue} Data`}
                           onChange={onChangePostTransitionDataHandler}
                           placeholder="Select an option"
-                          options={preTransitionData}
+                          options={postTransitionDropDownData}
                           styles={dropdownStyles}
                         />
                       </div>
@@ -327,7 +393,12 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                   )}
                   <Icon
                     iconName="StatusErrorFull"
-                    styles={{ root: { fontSize: "20px" } }}
+                    styles={{
+                      root: {
+                        fontSize: "20px",
+                        color: theme ? "darkgrey" : "red",
+                      },
+                    }}
                     onClick={() => {
                       setpostTransitionValue();
                       setpostTransitionValueData();
@@ -392,7 +463,12 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                   )}
                   <Icon
                     iconName="StatusErrorFull"
-                    styles={{ root: { fontSize: "20px" } }}
+                    styles={{
+                      root: {
+                        fontSize: "20px",
+                        color: theme ? "darkgrey" : "red",
+                      },
+                    }}
                     onClick={() => {
                       setConditionalNextStateValue();
                       setConditionalNextStateValueData();
