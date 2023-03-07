@@ -109,7 +109,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
   const contentStyles = mergeStyleSets({
     container: {
       boxShadow: theme ? "5px 5px 5px #313233" : "5px 5px 5px grey",
-      borderTop: theme ? `4px solid #26024a` : "4px solid #0a8cfa",
+      borderTop: theme ? `4px solid #0a8cfa` : "4px solid #0a8cfa",
       borderLeft: "1px solid grey",
       display: "flex",
       flexFlow: "column nowrap",
@@ -360,7 +360,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                       styles={{
                         root: {
                           fontSize: "20px",
-                          color: theme ? "darkgrey" : "red",
+                          color: theme ? "black" : "red",
                         },
                       }}
                       onClick={() => {
@@ -430,7 +430,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                       styles={{
                         root: {
                           fontSize: "20px",
-                          color: theme ? "darkgrey" : "red",
+                          color: theme ? "black" : "red",
                         },
                       }}
                       onClick={() => {
@@ -504,7 +504,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                       styles={{
                         root: {
                           fontSize: "20px",
-                          color: theme ? "darkgrey" : "red",
+                          color: theme ? "black" : "red",
                         },
                       }}
                       onClick={() => {

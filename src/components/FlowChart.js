@@ -51,7 +51,7 @@ const FlowChart = (props) => {
   const [edges, setEdges] = useState(initialEdges);
   const [nodes, setNodes] = useState(initialNodes);
   const [openModal, setOpenModal] = useState(false);
-  const [openFormModal, setOpenFormModal] = useState(false);
+  // const [openFormModal, setOpenFormModal] = useState(false);
   const [openEdgeFormModal, setEdgeOpenFormModal] = useState(false);
 
   const [{ isOver }, drop] = useDrop(() => ({
@@ -88,18 +88,18 @@ const FlowChart = (props) => {
 
   // on acception the node form
 
-  const onClickForm = (description) => {
-    onAddNode(
-      nodeObject.nodeKey,
-      nodeObject.nodeBackgroundColor,
-      nodeObject.nodeHeight,
-      nodeObject.nodeMargin,
-      nodeObject.nodeIcon,
-      nodeObject.nodeName,
-      nodeObject.nodeType,
-      description
-    );
-  };
+  // const onClickForm = (description) => {
+  //   onAddNode(
+  //     nodeObject.nodeKey,
+  //     nodeObject.nodeBackgroundColor,
+  //     nodeObject.nodeHeight,
+  //     nodeObject.nodeMargin,
+  //     nodeObject.nodeIcon,
+  //     nodeObject.nodeName,
+  //     nodeObject.nodeType,
+  //     description
+  //   );
+  // };
 
   const onAddNode = (
     keyId,
@@ -293,38 +293,6 @@ const FlowChart = (props) => {
       desc
     );
   };
-
-  // removes node and add a new one
-  const onNodeRightClick = (event, node) => {
-    setOpenDialog(false);
-    event.stopPropagation();
-    event.preventDefault();
-    const nodeCp = node;
-    const id = node.id;
-    let name = prompt("Name");
-    let desc = prompt("desc");
-    if (name === "" || name === null) {
-      name = node.name;
-    }
-    if (desc === "") {
-      desc = node.description;
-    }
-    removeNode(node.id);
-    onAddNode(
-      nodeCp.keyId,
-      nodeCp.color,
-      nodeCp.height,
-      nodeCp.margin,
-      nodeCp.icon,
-      name,
-      nodeCp.type,
-      desc,
-      id,
-      node.position.x,
-      node.position.y
-    );
-  };
-
   const removeNode = (id) => {
     let newNodes = [];
     nodes.map((node) => {
@@ -333,6 +301,39 @@ const FlowChart = (props) => {
       }
     });
     setNodes(newNodes);
+  };
+
+  // removes node and add a new one
+  const onNodeRightClick = (event, node) => {
+    setOpenDialog(false);
+    event.stopPropagation();
+    event.preventDefault();
+    if (node.id !== "0") {
+      const nodeCp = node;
+      const id = node.id;
+      let name = prompt("Name");
+      let desc = prompt("desc");
+      if (name === "" || name === null) {
+        name = node.name;
+      }
+      if (desc === "") {
+        desc = node.description;
+      }
+      removeNode(node.id);
+      onAddNode(
+        nodeCp.keyId,
+        nodeCp.color,
+        nodeCp.height,
+        nodeCp.margin,
+        nodeCp.icon,
+        name,
+        nodeCp.type,
+        desc,
+        id,
+        node.position.x,
+        node.position.y
+      );
+    }
   };
   const onAlterEdge = (text, desc, id) => {
     selectedEdge.label = text;
@@ -348,13 +349,6 @@ const FlowChart = (props) => {
   };
 
   const assignNodeValues = (color, icon, type, text) => {
-    if (nodeObject.type === "input") {
-      text = "Start";
-    } else if (nodeObject.type === "default") {
-      text = "Continuation";
-    } else {
-      text = "Finish";
-    }
     setnodeValues({ color: color, icon: icon, type: type });
     setnodeName(text);
     setOpenModal(true);
@@ -382,23 +376,7 @@ const FlowChart = (props) => {
           setOpenDialog={setOpenDialog}
         ></OptionDialog>
       )}
-      {/* //Opening the form modal for nodes */}
-      {/* {openFormModal && (
-        <motion.div
-          initial={{ opacity: 0.5 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.05 }}
-        >
-          <NodeForm
-            onAddNode={onClickForm}
-            setOpenFormModal={setOpenFormModal}
-            nodeName={nodeObject.nodeName}
-            nodeIcon={nodeObject.nodeIcon}
-            nodeBackgroundColor={nodeObject.nodeBackgroundColor}
-          />
-        </motion.div>
-      )} */}
+
       {/* //Opening the form modal for edges */}
       {openEdgeFormModal && (
         <motion.div

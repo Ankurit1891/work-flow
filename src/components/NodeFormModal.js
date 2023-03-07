@@ -31,7 +31,13 @@ const NodeFormModal = ({ nodeData, setOpenModal, alterNode, theme, name }) => {
   };
 
   const inputClasses = useStyles();
-
+  if (name === "input") {
+    name = "Start";
+  } else if (name === "default") {
+    name = "Continuation";
+  } else if (name === "output") {
+    name = "Finish";
+  }
   initializeIcons();
   const labelStyle = {
     marginTop: "10px",
@@ -47,7 +53,7 @@ const NodeFormModal = ({ nodeData, setOpenModal, alterNode, theme, name }) => {
   };
   const contentStyles = mergeStyleSets({
     container: {
-      borderTop: theme ? `4px solid #26024a` : "4px solid #0a8cfa",
+      borderTop: theme ? `4px solid #0a8cfa` : "4px solid #0a8cfa",
       borderLeft: "1px solid grey",
       boxShadow: theme ? "5px 5px 5px #313233" : "5px 5px 5px grey",
       display: "flex",
