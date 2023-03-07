@@ -71,9 +71,15 @@ const FlowChart = (props) => {
         nodeName: item.nodeName,
         NodeDescription: "",
       });
-      setOpenFormModal((e) => {
-        return !e;
-      });
+      // setOpenModal((e) => {
+      //   return !e;
+      // });
+      assignNodeValues(
+        item.nodeBackgroundColor,
+        item.nodeIcon,
+        item.nodeType,
+        item.nodeType
+      );
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -103,7 +109,10 @@ const FlowChart = (props) => {
     icon,
     name,
     type,
-    description
+    description,
+    id = null,
+    positionX = null,
+    positionY = null
   ) => {
     const color = backgroundColor;
 
@@ -120,7 +129,8 @@ const FlowChart = (props) => {
     }
 
     const newNode = {
-      id: `${nodes.length}`,
+      id: id === null ? `${nodes.length}` : id,
+      icon: icon,
       name: name,
       description: description,
       type: type,
@@ -145,8 +155,8 @@ const FlowChart = (props) => {
         style: { nodeStyle },
       },
       position: {
-        x: nodes[nodes.length - 1].position.x,
-        y: nodes[nodes.length - 1].position.y + 90,
+        x: positionX ? positionX : nodes[nodes.length - 1].position.x,
+        y: positionY ? positionY : nodes[nodes.length - 1].position.y + 100,
       },
     };
     setNodes((prevNode) => {
@@ -209,7 +219,7 @@ const FlowChart = (props) => {
 
   const onNodeLeftClick = (event, node) => {
     console.log(node);
-
+    setOpenDialog(false);
     if (node && node.getOutgoingEdges) {
       const outgoers = node.getOutgoingEdges();
       console.log("Outgoing edges:", outgoers);
@@ -284,13 +294,46 @@ const FlowChart = (props) => {
     );
   };
 
+  // removes node and add a new one
   const onNodeRightClick = (event, node) => {
+    setOpenDialog(false);
     event.stopPropagation();
     event.preventDefault();
-    setSelectedNode(node);
-    console.log(selectedNode);
+    const nodeCp = node;
+    const id = node.id;
+    let name = prompt("Name");
+    let desc = prompt("desc");
+    if (name === "" || name === null) {
+      name = node.name;
+    }
+    if (desc === "") {
+      desc = node.description;
+    }
+    removeNode(node.id);
+    onAddNode(
+      nodeCp.keyId,
+      nodeCp.color,
+      nodeCp.height,
+      nodeCp.margin,
+      nodeCp.icon,
+      name,
+      nodeCp.type,
+      desc,
+      id,
+      node.position.x,
+      node.position.y
+    );
   };
 
+  const removeNode = (id) => {
+    let newNodes = [];
+    nodes.map((node) => {
+      if (node.id !== id) {
+        newNodes.push(node);
+      }
+    });
+    setNodes(newNodes);
+  };
   const onAlterEdge = (text, desc, id) => {
     selectedEdge.label = text;
     selectedEdge.description = desc;
@@ -303,11 +346,15 @@ const FlowChart = (props) => {
     newEdges.push(selectedEdge);
     setEdges(newEdges);
   };
-  // const setNodeValues = (color, icon, type) => {
-  //   setnodeValues(color, icon, type);
-  //   setOpenModal(true);
-  // };
+
   const assignNodeValues = (color, icon, type, text) => {
+    if (nodeObject.type === "input") {
+      text = "Start";
+    } else if (nodeObject.type === "default") {
+      text = "Continuation";
+    } else {
+      text = "Finish";
+    }
     setnodeValues({ color: color, icon: icon, type: type });
     setnodeName(text);
     setOpenModal(true);
@@ -336,7 +383,7 @@ const FlowChart = (props) => {
         ></OptionDialog>
       )}
       {/* //Opening the form modal for nodes */}
-      {openFormModal && (
+      {/* {openFormModal && (
         <motion.div
           initial={{ opacity: 0.5 }}
           animate={{ opacity: 1 }}
@@ -351,7 +398,7 @@ const FlowChart = (props) => {
             nodeBackgroundColor={nodeObject.nodeBackgroundColor}
           />
         </motion.div>
-      )}
+      )} */}
       {/* //Opening the form modal for edges */}
       {openEdgeFormModal && (
         <motion.div
@@ -375,6 +422,8 @@ const FlowChart = (props) => {
           theme={props.theme}
           node={selectedNode}
           nodeData={nodeValues}
+          // nodeIcon={nodeObject.nodeIcon}
+          // nodeBackgroundColor={nodeObject.nodeBackgroundColor}
           setOpenModal={setOpenModal}
           alterNode={onAlterNode}
         />

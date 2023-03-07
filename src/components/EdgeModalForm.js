@@ -19,19 +19,38 @@ import {
   IconButton,
   PrimaryButton,
 } from "@fluentui/react/lib/Button";
+import { useForm } from "react-hook-form";
 
 const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
   const [counter, setcounter] = useState([]);
+
+  const formCheckError = (text) => {
+    let value = {};
+    if (text.length === 0) {
+      value = { val: 1, message: "Enter a valid text" };
+      return value;
+    } else if (text.length > 0 && text.length < 3) {
+      value = { val: 2, message: "Minimun length should be 3" };
+      return value;
+    } else {
+      value = { val: 3, message: "" };
+      return value;
+    }
+  };
   const edgeFormAcceptHandler = () => {
-    console.log(
-      `pre trans => ${preTransitionValue} , post trans => ${postTransitionValue} , conditional state value => ${conditionalNextStateValue} , system event code => ${onChangeSystemEventCode}`
-    );
-    setDescription("Dummy Data");
-    console.log(
-      `pre trans value=> ${postTransitionValueData} , post trans value=> ${preTransitionValueData} , conditional state value => ${conditionalNextStateValueData} , system event code => ${onChangeSystemEventCode}`
-    );
-    setEdgeOpenFormModal(false);
-    alterEdge(text, description, edge.id);
+    if (formCheckError(text).val === 1 || formCheckError(text).val === 2) {
+      setNameErrorMessage(formCheckError(text).message);
+    } else {
+      console.log(
+        `pre trans => ${preTransitionValue} , post trans => ${postTransitionValue} , conditional state value => ${conditionalNextStateValue} , system event code => ${onChangeSystemEventCode}`
+      );
+      setDescription("Dummy Data");
+      console.log(
+        `pre trans value=> ${postTransitionValueData} , post trans value=> ${preTransitionValueData} , conditional state value => ${conditionalNextStateValueData} , system event code => ${onChangeSystemEventCode}`
+      );
+      setEdgeOpenFormModal(false);
+      alterEdge(text, description, edge.id);
+    }
   };
 
   // transtion value data 2ns drop down
@@ -51,6 +70,8 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
   // show button (additional)
   const [showButton, setshowButton] = useState(true);
 
+  // name error
+  const [nameErrorMessage, setNameErrorMessage] = useState("");
   //edge name
   const [text, setText] = useState("");
 
@@ -65,9 +86,12 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
   const [postTransitionDropDownData, setPostTransitionDropDownData] =
     useState();
 
-  // on name chnage handler
+  // on name change handler
   const onChangeHandlerName = (e) => {
     setText(e.target.value);
+    if (e.target.value.length >= 3) {
+      setNameErrorMessage("");
+    }
   };
 
   const light = "white";
@@ -221,6 +245,8 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
     setpostTransitionValueData(() => option.text);
   };
   initializeIcons();
+
+  const methods = useForm();
   return (
     <motion.div>
       <Modal
@@ -247,305 +273,321 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
             }}
           />
         </div>
-        <div className={contentStyles.body}>
-          <div>
-            <TextField
-              onChange={onChangeHandlerName}
-              value={text}
-              className={inputClasses.stateName}
-              label="Transition Name"
-              style={{
-                fontWeight: "400",
-              }}
-              placeholder="Enter transition name  here"
-            />
-            <Dropdown
-              onChange={onChangeSystemEventCodeHandler}
-              label="System Event Code"
-              placeholder="Select an option"
-              options={systemCodeData}
-              styles={dropdownStyles}
-            />
-          </div>
-          <div>
-            {counter.length > 0 && counter.includes(1) && (
-              <motion.div
-                style={motionDivStyle}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 1 }}
-              >
-                <Stack
-                  childrenGap="10"
-                  verticalAlign="end"
-                  horizontal
-                  styles={{ root: {} }}
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            methods.handleSubmit((data) => {
+              // console.log(;
+              console.log(data);
+            })();
+          }}
+        >
+          <div className={contentStyles.body}>
+            <div>
+              {/* <form onSubmit={methods.handleSubmit(console.log(first))}> */}
+              <TextField
+                // required={true}
+                // errorMessage={nameErrorMessage}
+                {...methods.register("Transition_name", {
+                  required: true,
+                  minLength: { value: 3, message: "Min Length is 3" },
+                })}
+                onChange={onChangeHandlerName}
+                // value={text}
+                className={inputClasses.stateName}
+                label="Transition Name"
+                style={{
+                  fontWeight: "400",
+                }}
+                placeholder="Enter transition name  here"
+              />
+              {/* <button type="submit">ok</button> */}
+              {/* </form> */}
+              <Dropdown
+                {...methods.register("system_event_code")}
+                // required={true}
+                // onChange={onChangeSystemEventCodeHandler}
+                label="System Event Code"
+                placeholder="Select an option"
+                options={systemCodeData}
+                styles={dropdownStyles}
+              />
+            </div>
+            <div>
+              {counter.length > 0 && counter.includes(1) && (
+                <motion.div
+                  style={motionDivStyle}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 1 }}
                 >
-                  <Dropdown
-                    label="Pre-Transition Action"
-                    onChange={onChangePreTransitionHandler}
-                    placeholder="Select an option"
-                    options={preTransitionData}
-                    styles={dropdownStyles}
-                  />
-                  {preTransitionValue && (
-                    <div style={{ marginTop: "-10px", marginLeft: "35px" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Dropdown
-                          label={`${preTransitionValue} Data`}
-                          onChange={onChangePreTransitionDataHandler}
-                          placeholder="Select an option"
-                          options={preTransitionDropDownData}
-                          styles={dropdownStyles}
-                        />
+                  <Stack
+                    childrenGap="10"
+                    verticalAlign="end"
+                    horizontal
+                    styles={{ root: {} }}
+                  >
+                    <Dropdown
+                      {...methods.register("Pre_Transition_Action")}
+                      label="Pre-Transition Action"
+                      onChange={onChangePreTransitionHandler}
+                      placeholder="Select an option"
+                      options={preTransitionData}
+                      styles={dropdownStyles}
+                    />
+                    {preTransitionValue && (
+                      <div style={{ marginTop: "-10px", marginLeft: "35px" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Dropdown
+                            {...methods.register(`${preTransitionValue}_Data`)}
+                            label={`${preTransitionValue} Data`}
+                            onChange={onChangePreTransitionDataHandler}
+                            placeholder="Select an option"
+                            options={preTransitionDropDownData}
+                            styles={dropdownStyles}
+                          />
+                        </div>
                       </div>
-                    </div>
-                  )}
-                  <Icon
-                    iconName="StatusErrorFull"
-                    styles={{
-                      root: {
-                        fontSize: "20px",
-                        color: theme ? "darkgrey" : "red",
-                      },
-                    }}
-                    onClick={() => {
-                      setPreTransitionValue();
-                      setPreTransitionValueData();
-                      if (counter.length === 1) {
-                        setshowButton(true);
-                        setcounter([]);
-                      } else if (
-                        counter.length === 2 &&
-                        (counter.includes(2) || counter.includes(3))
-                      ) {
-                        setshowButton(true);
-                        setcounter(counter.includes(2) ? [2] : [3]);
-                      } else if (counter.length === 3) {
-                        setshowButton(true);
-                        setcounter([2, 3]);
-                      }
-
-                      // if (counter.length === 1) {
-                      //   setshowButton(true);
-                      //   setcounter([]);
-                      // } else if (counter.length === 2) {
-                      //   if (counter.includes(2)) {
-                      //     setshowButton(true);
-                      //     setcounter([2]);
-                      //   } else if (counter.includes(3)) {
-                      //     setshowButton(true);
-                      //     setcounter([3]);
-                      //   }
-                      // } else if (counter.length === 3) {
-                      //   setshowButton(true);
-                      //   setcounter([2, 3]);
-                      // }
-                    }}
-                  />
-                </Stack>
-              </motion.div>
-            )}
-            {counter.length > 0 && counter.includes(2) && (
-              <motion.div
-                style={motionDivStyle}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 1 }}
-              >
-                <Stack
-                  childrenGap="10"
-                  verticalAlign="end"
-                  horizontal
-                  styles={{ root: {} }}
-                >
-                  <Dropdown
-                    label="Post-Transition Action"
-                    onChange={onChangePostTransitionHandler}
-                    placeholder="Select an option"
-                    options={postTransitionData}
-                    styles={dropdownStyles}
-                  />
-                  {postTransitionValue && (
-                    <div style={{ marginTop: "-10px", marginLeft: "35px" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Dropdown
-                          label={`${postTransitionValue} Data`}
-                          onChange={onChangePostTransitionDataHandler}
-                          placeholder="Select an option"
-                          options={postTransitionDropDownData}
-                          styles={dropdownStyles}
-                        />
-                      </div>
-                    </div>
-                  )}
-                  <Icon
-                    iconName="StatusErrorFull"
-                    styles={{
-                      root: {
-                        fontSize: "20px",
-                        color: theme ? "darkgrey" : "red",
-                      },
-                    }}
-                    onClick={() => {
-                      setpostTransitionValue();
-                      setpostTransitionValueData();
-                      if (counter.length === 1) {
-                        setshowButton(true);
-                        setcounter([]);
-                      } else if (counter.length === 2) {
-                        if (counter.includes(1)) {
+                    )}
+                    <Icon
+                      iconName="StatusErrorFull"
+                      styles={{
+                        root: {
+                          fontSize: "20px",
+                          color: theme ? "darkgrey" : "red",
+                        },
+                      }}
+                      onClick={() => {
+                        setPreTransitionValue();
+                        setPreTransitionValueData();
+                        if (counter.length === 1) {
                           setshowButton(true);
-                          setcounter([1]);
-                        } else if (counter.includes(3)) {
+                          setcounter([]);
+                        } else if (
+                          counter.length === 2 &&
+                          (counter.includes(2) || counter.includes(3))
+                        ) {
                           setshowButton(true);
-                          setcounter([3]);
+                          setcounter(counter.includes(2) ? [2] : [3]);
+                        } else if (counter.length === 3) {
+                          setshowButton(true);
+                          setcounter([2, 3]);
                         }
-                      } else if (counter.length === 3) {
-                        setshowButton(true);
+                      }}
+                    />
+                  </Stack>
+                </motion.div>
+              )}
+              {counter.length > 0 && counter.includes(2) && (
+                <motion.div
+                  style={motionDivStyle}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 1 }}
+                >
+                  <Stack
+                    childrenGap="10"
+                    verticalAlign="end"
+                    horizontal
+                    styles={{ root: {} }}
+                  >
+                    <Dropdown
+                      label="Post-Transition Action"
+                      {...methods.register("Post_Transition_Action")}
+                      onChange={onChangePostTransitionHandler}
+                      placeholder="Select an option"
+                      options={postTransitionData}
+                      styles={dropdownStyles}
+                    />
+                    {postTransitionValue && (
+                      <div style={{ marginTop: "-10px", marginLeft: "35px" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Dropdown
+                            label={`${postTransitionValue} Data`}
+                            {...methods.register(`${postTransitionValue} Data`)}
+                            onChange={onChangePostTransitionDataHandler}
+                            placeholder="Select an option"
+                            options={postTransitionDropDownData}
+                            styles={dropdownStyles}
+                          />
+                        </div>
+                      </div>
+                    )}
+                    <Icon
+                      iconName="StatusErrorFull"
+                      styles={{
+                        root: {
+                          fontSize: "20px",
+                          color: theme ? "darkgrey" : "red",
+                        },
+                      }}
+                      onClick={() => {
+                        setpostTransitionValue();
+                        setpostTransitionValueData();
+                        if (counter.length === 1) {
+                          setshowButton(true);
+                          setcounter([]);
+                        } else if (counter.length === 2) {
+                          if (counter.includes(1)) {
+                            setshowButton(true);
+                            setcounter([1]);
+                          } else if (counter.includes(3)) {
+                            setshowButton(true);
+                            setcounter([3]);
+                          }
+                        } else if (counter.length === 3) {
+                          setshowButton(true);
+                          setcounter([1, 3]);
+                        }
+                      }}
+                    />
+                  </Stack>
+                </motion.div>
+              )}
+              {counter.length > 0 && counter.includes(3) && (
+                <motion.div
+                  style={motionDivStyle}
+                  initial={{ opacity: 0.5 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 1 }}
+                >
+                  <Stack
+                    childrenGap="10"
+                    verticalAlign="end"
+                    horizontal
+                    styles={{ root: {} }}
+                  >
+                    <Dropdown
+                      {...methods.register("Conditional_Next_State")}
+                      onChange={onChangeConditionalNextStateHandler}
+                      label="Conditional Next State"
+                      placeholder="Select an option"
+                      options={conditionalNextState}
+                      styles={dropdownStyles}
+                    />
+                    {conditionalNextStateValue && (
+                      <div style={{ marginTop: "-10px", marginLeft: "35px" }}>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Dropdown
+                            {...methods.register(
+                              `${conditionalNextStateValue} Data`
+                            )}
+                            label={`${conditionalNextStateValue} Data`}
+                            onChange={onChangeConditionalNextStateDataHandler}
+                            placeholder="Select an option"
+                            options={preTransitionData}
+                            styles={dropdownStyles}
+                          />
+                        </div>
+                      </div>
+                    )}
+                    <Icon
+                      iconName="StatusErrorFull"
+                      styles={{
+                        root: {
+                          fontSize: "20px",
+                          color: theme ? "darkgrey" : "red",
+                        },
+                      }}
+                      onClick={() => {
+                        setConditionalNextStateValue();
+                        setConditionalNextStateValueData();
+                        if (counter.length === 1) {
+                          setshowButton(true);
+                          setcounter([]);
+                        } else if (counter.length === 2) {
+                          if (counter.includes(1)) {
+                            setshowButton(true);
+                            setcounter([1]);
+                          } else if (counter.includes(2)) {
+                            setshowButton(true);
+                            setcounter([2]);
+                          }
+                        } else if (counter.length === 3) {
+                          setshowButton(true);
+                          setcounter([1, 2]);
+                        }
+                      }}
+                    />
+                  </Stack>
+                </motion.div>
+              )}
+              {showButton && (
+                <span
+                  style={{
+                    fontSize: "15px",
+                    marginLeft: "0px",
+                    marginRight: "10px",
+                    color: theme ? "black" : "#e2d6d6",
+                  }}
+                >
+                  <i>Add additional info</i>
+                </span>
+              )}
+              {showButton && (
+                <AddCircle24Filled
+                  primaryFill="#0a8cfa"
+                  onClick={() => {
+                    if (counter.length === 0) {
+                      setcounter([1]);
+                    } else if (counter.length === 1) {
+                      if (counter.includes(1)) {
+                        setcounter([1, 2]);
+                      } else if (counter.includes(2)) {
+                        setcounter([1, 2]);
+                      } else if (counter.includes(3)) {
                         setcounter([1, 3]);
                       }
-                    }}
-                  />
-                </Stack>
-              </motion.div>
-            )}
-            {counter.length > 0 && counter.includes(3) && (
-              <motion.div
-                style={motionDivStyle}
-                initial={{ opacity: 0.5 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 1 }}
-              >
-                <Stack
-                  childrenGap="10"
-                  verticalAlign="end"
-                  horizontal
-                  styles={{ root: {} }}
-                >
-                  <Dropdown
-                    onChange={onChangeConditionalNextStateHandler}
-                    label="Conditional Next State"
-                    placeholder="Select an option"
-                    options={conditionalNextState}
-                    styles={dropdownStyles}
-                  />
-                  {conditionalNextStateValue && (
-                    <div style={{ marginTop: "-10px", marginLeft: "35px" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Dropdown
-                          label={`${conditionalNextStateValue} Data`}
-                          onChange={onChangeConditionalNextStateDataHandler}
-                          placeholder="Select an option"
-                          options={preTransitionData}
-                          styles={dropdownStyles}
-                        />
-                      </div>
-                    </div>
-                  )}
-                  <Icon
-                    iconName="StatusErrorFull"
-                    styles={{
-                      root: {
-                        fontSize: "20px",
-                        color: theme ? "darkgrey" : "red",
-                      },
-                    }}
-                    onClick={() => {
-                      setConditionalNextStateValue();
-                      setConditionalNextStateValueData();
-                      if (counter.length === 1) {
-                        setshowButton(true);
-                        setcounter([]);
-                      } else if (counter.length === 2) {
-                        if (counter.includes(1)) {
-                          setshowButton(true);
-                          setcounter([1]);
-                        } else if (counter.includes(2)) {
-                          setshowButton(true);
-                          setcounter([2]);
-                        }
-                      } else if (counter.length === 3) {
-                        setshowButton(true);
-                        setcounter([1, 2]);
-                      }
-                    }}
-                  />
-                </Stack>
-              </motion.div>
-            )}
-            {showButton && (
-              <span
-                style={{
-                  fontSize: "15px",
-                  marginLeft: "0px",
-                  marginRight: "10px",
-                  color: theme ? "black" : "#e2d6d6",
-                }}
-              >
-                <i>Add additional info</i>
-              </span>
-            )}
-            {showButton && (
-              <AddCircle24Filled
-                primaryFill="#0a8cfa"
-                onClick={() => {
-                  if (counter.length === 0) {
-                    setcounter([1]);
-                  } else if (counter.length === 1) {
-                    if (counter.includes(1)) {
-                      setcounter([1, 2]);
-                    } else if (counter.includes(2)) {
-                      setcounter([1, 2]);
-                    } else if (counter.includes(3)) {
-                      setcounter([1, 3]);
+                    } else if (counter.length === 2) {
+                      setshowButton(false);
+                      setcounter([1, 2, 3]);
                     }
-                  } else if (counter.length === 2) {
-                    setshowButton(false);
-                    setcounter([1, 2, 3]);
-                  }
-                }}
-              />
-            )}
+                  }}
+                />
+              )}
+            </div>
           </div>
-        </div>
-        <Stack
-          tokens={{ childrenGap: 10 }}
-          horizontalAlign="end"
-          horizontal
-          styles={{ root: { padding: "10px" } }}
-        >
-          <DefaultButton
-            text="CANCEL"
-            onClick={() => {
-              setEdgeOpenFormModal(false);
-            }}
-            allowDisabledFocus
-          />
-          <PrimaryButton
-            text="CONFIRM"
-            onClick={edgeFormAcceptHandler}
-            allowDisabledFocus
-          />
-        </Stack>
+          <div>
+            <Stack
+              tokens={{ childrenGap: 10 }}
+              horizontalAlign="end"
+              horizontal
+              styles={{ root: { padding: "10px" } }}
+            >
+              <DefaultButton
+                text="CANCEL"
+                onClick={() => {
+                  setEdgeOpenFormModal(false);
+                }}
+                allowDisabledFocus
+              />
+              <PrimaryButton
+                type="submit"
+                text="CONFIRM"
+                // onClick={edgeFormAcceptHandler}
+                allowDisabledFocus
+              />
+            </Stack>
+          </div>
+        </form>
       </Modal>
     </motion.div>
   );

@@ -30,11 +30,6 @@ const OptionDialog = (props) => {
       style={{
         top: props.xCords - 50,
         left: props.yCords,
-        // backgroundColor: props.theme ? "white" : "#3d3d3f",
-        // border: props.theme ? "1px solid white" : "1px solid #3d3d3f",
-        // boxShadow: props.theme
-        //   ? "1px 1px 4px -1px black"
-        //   : "1px 1px 4px -1px #ece5e5",
       }}
     >
       <ul
