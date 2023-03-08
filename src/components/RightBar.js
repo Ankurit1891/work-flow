@@ -24,7 +24,7 @@ const RightBar = (props) => {
       return !prev;
     });
   };
-
+  console.log(props.nodes[0].id);
   const onNodeAdd = (x, y, height, backgroundColor, margin, key) => {
     props.onAddNewNode(x, y, height, backgroundColor, margin, key);
   };

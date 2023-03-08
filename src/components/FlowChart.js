@@ -3,7 +3,6 @@ import { motion } from "framer-motion";
 import "reactflow/dist/style.css";
 import { BsSave2 } from "react-icons/bs";
 import { BsFillPrinterFill } from "react-icons/bs";
-
 import ReactFlow, {
   Background,
   ControlButton,
@@ -18,7 +17,6 @@ import { nodeStyle } from "../node_data/RightBarNodeList";
 import { initialEdges, initialNodes } from "../node_data/NodeData";
 import CustomNode from "./CustomNode";
 import { useDrop } from "react-dnd";
-import NodeForm from "../extras/NodeForm";
 import EdgeModalForm from "./EdgeModalForm";
 import html2canvas from "html2canvas";
 import OptionDialog from "./OptionDialog";
@@ -86,21 +84,6 @@ const FlowChart = (props) => {
     }),
   }));
 
-  // on acception the node form
-
-  // const onClickForm = (description) => {
-  //   onAddNode(
-  //     nodeObject.nodeKey,
-  //     nodeObject.nodeBackgroundColor,
-  //     nodeObject.nodeHeight,
-  //     nodeObject.nodeMargin,
-  //     nodeObject.nodeIcon,
-  //     nodeObject.nodeName,
-  //     nodeObject.nodeType,
-  //     description
-  //   );
-  // };
-
   const onAddNode = (
     keyId,
     backgroundColor,
@@ -162,6 +145,7 @@ const FlowChart = (props) => {
     setNodes((prevNode) => {
       return [...prevNode, newNode];
     });
+    props.updatedNodes(nodes);
   };
 
   const onNodesChange = useCallback(
@@ -174,26 +158,16 @@ const FlowChart = (props) => {
   const onConnect = (params) => {
     if (!openEdgeFormModal) {
       const { source, target } = params;
-      // params.connection.edge = {
-      //   ...params.connection.edge,
-      //   arrowHeadColor: "red", // Set the arrowhead color to red
-      //   style: { stroke: "blue" }, // Set the line color to blue
-      // };
       const newEdge = {
         id: `e${source}->${target}`,
         source: source,
         target: target,
         strokeWidth: 3,
-
-        // style: { stroke: "grey" },
-        // color: "black",
         type: "smoothstep",
         className: "smoothstep",
         animated: false,
         orient: "auto",
-        // style: { width: "10px", border: "2px solid white" },
         labelBgStyle: { fill: "grey" },
-
         labelStyle: {
           fill: "white",
           fontWeight: "400",
@@ -250,12 +224,6 @@ const FlowChart = (props) => {
   const nodeColor = (node) => {
     return node.color === "white" ? "grey" : node.color;
   };
-
-  // changing the colour of the canvas
-
-  // const onColorChangeHandler = (e) => {
-  //   setCanvasColor(e.target.value);
-  // };
 
   // exporting the workflow to chart
 
@@ -461,17 +429,6 @@ const FlowChart = (props) => {
             <BsSave2 />
           </ControlButton>
         </Controls>
-        {/* <Panel position="top-left">
-          <div className="panel__background-color">
-            <span>Background Color</span>
-            <input
-              type="color"
-              name="canvas-color"
-              value={canvasColor}
-              onChange={onColorChangeHandler}
-            />
-          </div>
-        </Panel> */}
       </ReactFlow>
     </div>
   );

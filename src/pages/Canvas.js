@@ -6,11 +6,11 @@ import FlowChart from "../components/FlowChart";
 import RightBar from "../components/RightBar";
 import { Toggle } from "@fluentui/react/lib/Toggle";
 import { initialNodes, initialEdges } from "../node_data/NodeData";
-import { ThemeProvider, Stack } from "@fluentui/react";
+import { ThemeProvider } from "@fluentui/react";
 import { lightTheme } from "../themes/lightTheme";
 import { darkTheme } from "../themes/darkTheme";
 const Canvas = (props) => {
-  const nodes = initialNodes;
+  const [nodes, setNodes] = useState(initialNodes);
   const [isdarkTheme, setIsDarkTheme] = useState(true);
   const [open, setOpen] = useState("true");
 
@@ -36,6 +36,10 @@ const Canvas = (props) => {
       console.log(prev);
       return !prev;
     });
+  };
+
+  const updatedNodes = (newNodes) => {
+    setNodes(newNodes);
   };
 
   return (
@@ -74,6 +78,7 @@ const Canvas = (props) => {
               />
             </div>
             <FlowChart
+              updatedNodes={updatedNodes}
               cords={[xx, yy]}
               styles={[height, margin, backgroundColor]}
               keyId={key}
@@ -97,6 +102,7 @@ const Canvas = (props) => {
           style={{ backgroundColor: isdarkTheme ? "#ffffff" : "#000000" }}
         >
           <RightBar
+            nodes={nodes}
             onAddNewNode={onAddNode}
             setOpenRightBar={setOpen}
             theme={isdarkTheme}
