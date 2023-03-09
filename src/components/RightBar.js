@@ -8,11 +8,23 @@ import { AiOutlineDoubleLeft } from "react-icons/ai";
 const RightBar = (props) => {
   const [openBar, setOpenBar] = useState(true);
   const [isOpen, setisOpen] = useState(<AiOutlineDoubleRight />);
+  const [selectedNode, setSelectedNode] = useState(null);
   let open = true;
 
   const sidebarOnClickHandler = (e) => {
     props.setOpenRightBar((prev) => {
       open = !prev;
+      if (open) {
+        // let ctr = 0;
+        props.nodes.map((node) => {
+          if (node.id === "0") {
+            console.log(node);
+            return setSelectedNode(node);
+          } else {
+            setSelectedNode(null);
+          }
+        });
+      }
       setOpenBar(open);
       setisOpen((prev) => {
         return open === true ? (
@@ -24,7 +36,15 @@ const RightBar = (props) => {
       return !prev;
     });
   };
-  console.log(props.nodes[0].id);
+  // console.log(props.nodes[0].id);
+  // if (openBar) {
+  //   props.nodes.map((node) => {
+  //     if (node.id === "0") {
+  //       setSelectedNode(node);
+  //     }
+  //   });
+  // }
+
   const onNodeAdd = (x, y, height, backgroundColor, margin, key) => {
     props.onAddNewNode(x, y, height, backgroundColor, margin, key);
   };
@@ -64,29 +84,57 @@ const RightBar = (props) => {
       {openBar && (
         <div style={{ overflowY: "auto", overflowX: "hidden" }}>
           {nodeList.map((node) => {
-            return (
-              <div className="draggable-object" key={node.key}>
-                <div>
-                  <CustomNode
-                    theme={props.theme}
-                    NodeType={node.nodeType}
-                    NodeIcon={node.nodeIcon}
-                    NodeName={node.nodeName}
-                    NodeDescription={node.nodeDescription}
-                    parent={"rightBar"}
-                    onNodeAdd={onNodeAdd}
-                    NodeKey={node.nodeID}
-                    NodeID={node.nodeID}
-                    Nodeheight={node.nodeHeight}
-                    Nodewidth={node.nodeWidth}
-                    NodebackgroundColor={node.nodeBackgroundColor}
-                    NodeborderRadius={node.nodeBorderRadius}
-                    Nodemargin={node.nodeMargin}
-                    Nodepadding={node.nodePadding}
-                  ></CustomNode>
+            if (selectedNode === null) {
+              return (
+                <div className="draggable-object" key={node.key}>
+                  <div>
+                    <CustomNode
+                      theme={props.theme}
+                      NodeType={node.nodeType}
+                      NodeIcon={node.nodeIcon}
+                      NodeName={node.nodeName}
+                      NodeDescription={node.nodeDescription}
+                      parent={"rightBar"}
+                      onNodeAdd={onNodeAdd}
+                      NodeKey={node.nodeID}
+                      NodeID={node.nodeID}
+                      Nodeheight={node.nodeHeight}
+                      Nodewidth={node.nodeWidth}
+                      NodebackgroundColor={node.nodeBackgroundColor}
+                      NodeborderRadius={node.nodeBorderRadius}
+                      Nodemargin={node.nodeMargin}
+                      Nodepadding={node.nodePadding}
+                    ></CustomNode>
+                  </div>
                 </div>
-              </div>
-            );
+              );
+            } else {
+              if (node.nodeBackgroundColor !== "#0078d4") {
+                return (
+                  <div className="draggable-object" key={node.key}>
+                    <div>
+                      <CustomNode
+                        theme={props.theme}
+                        NodeType={node.nodeType}
+                        NodeIcon={node.nodeIcon}
+                        NodeName={node.nodeName}
+                        NodeDescription={node.nodeDescription}
+                        parent={"rightBar"}
+                        onNodeAdd={onNodeAdd}
+                        NodeKey={node.nodeID}
+                        NodeID={node.nodeID}
+                        Nodeheight={node.nodeHeight}
+                        Nodewidth={node.nodeWidth}
+                        NodebackgroundColor={node.nodeBackgroundColor}
+                        NodeborderRadius={node.nodeBorderRadius}
+                        Nodemargin={node.nodeMargin}
+                        Nodepadding={node.nodePadding}
+                      ></CustomNode>
+                    </div>
+                  </div>
+                );
+              }
+            }
           })}
         </div>
       )}

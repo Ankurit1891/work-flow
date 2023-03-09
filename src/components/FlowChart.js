@@ -33,6 +33,7 @@ const FlowChart = (props) => {
   const [selectedEdge, setSelectedEdge] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
   const [nodeObject, setNodeObject] = useState({
+    id: null,
     xCords: 0,
     yCords: 0,
     nodeKey: "",
@@ -58,8 +59,8 @@ const FlowChart = (props) => {
       console.log(isOver);
       // const dropCoordinates = monitor.getClientOffset();
       setNodeObject({
-        xCords: nodes[nodes.length - 1].position.x,
-        yCords: nodes[nodes.length - 1].position.y,
+        xCords: nodes.length > 0 ? nodes[nodes.length - 1].position.x : 500,
+        yCords: nodes.length > 0 ? nodes[nodes.length - 1].position.y : 150,
         nodeKey: item.nodeKey,
         nodeBackgroundColor: item.nodeBackgroundColor,
         nodeHeight: item.nodeHeight,
@@ -138,8 +139,16 @@ const FlowChart = (props) => {
         style: { nodeStyle },
       },
       position: {
-        x: positionX ? positionX : nodes[nodes.length - 1].position.x,
-        y: positionY ? positionY : nodes[nodes.length - 1].position.y + 100,
+        x: positionX
+          ? positionX
+          : nodes.length > 0
+          ? nodes[nodes.length - 1].position.x
+          : 500,
+        y: positionY
+          ? positionY
+          : nodes.length > 0
+          ? nodes[nodes.length - 1].position.y + 100
+          : 150,
       },
     };
     setNodes((prevNode) => {
@@ -181,6 +190,7 @@ const FlowChart = (props) => {
         },
       };
       setEdges([...edges, newEdge]);
+      props.updatedNodes(nodes);
     }
   };
 
@@ -192,6 +202,7 @@ const FlowChart = (props) => {
   //  function on node left click
 
   const onNodeLeftClick = (event, node) => {
+    props.updatedNodes(nodes);
     console.log(node);
     setOpenDialog(false);
     if (node && node.getOutgoingEdges) {
@@ -203,6 +214,7 @@ const FlowChart = (props) => {
   //function on edge right click
 
   const onEdgeRightClick = (event, edge) => {
+    props.updatedNodes(nodes);
     event.stopPropagation();
     event.preventDefault();
     setSelectedEdge(edge);
@@ -239,6 +251,7 @@ const FlowChart = (props) => {
   };
 
   const onCanvasRightClick = (e) => {
+    props.updatedNodes(nodes);
     e.preventDefault();
     setCoords({
       x: e.clientY - 30,
@@ -269,6 +282,7 @@ const FlowChart = (props) => {
       }
     });
     setNodes(newNodes);
+    props.updatedNodes(nodes);
   };
 
   // removes node and add a new one
@@ -320,6 +334,7 @@ const FlowChart = (props) => {
     setnodeValues({ color: color, icon: icon, type: type });
     setnodeName(text);
     setOpenModal(true);
+    props.updatedNodes(nodes);
   };
   return (
     <div
