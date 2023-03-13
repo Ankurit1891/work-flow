@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
+import { Input } from "./Input";
 import event_code from "../api_data/event_code";
 import React, { useState, useEffect } from "react";
-import { TextField } from "@fluentui/react/lib/TextField";
+// import { TextField } from "@fluentui/react/lib/TextField";
 import { Dropdown } from "@fluentui/react/lib/Dropdown";
 import { AddCircle24Filled } from "@fluentui/react-icons";
 
@@ -22,6 +23,14 @@ import {
 import { useForm } from "react-hook-form";
 
 const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
+  const {
+    handleSubmit,
+    watch,
+    control,
+    formState: {},
+  } = useForm({
+    mode: "all",
+  });
   const [counter, setcounter] = useState([]);
 
   const formCheckError = (text) => {
@@ -38,19 +47,15 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
     }
   };
   const edgeFormAcceptHandler = () => {
-    if (formCheckError(text).val === 1 || formCheckError(text).val === 2) {
-      setNameErrorMessage(formCheckError(text).message);
-    } else {
-      console.log(
-        `pre trans => ${preTransitionValue} , post trans => ${postTransitionValue} , conditional state value => ${conditionalNextStateValue} , system event code => ${onChangeSystemEventCode}`
-      );
-      setDescription("Dummy Data");
-      console.log(
-        `pre trans value=> ${postTransitionValueData} , post trans value=> ${preTransitionValueData} , conditional state value => ${conditionalNextStateValueData} , system event code => ${onChangeSystemEventCode}`
-      );
-      setEdgeOpenFormModal(false);
-      alterEdge(text, description, edge.id);
-    }
+    console.log(
+      `Transition name =>${transitionName}pre trans => ${preTransitionValue} , post trans => ${postTransitionValue} , conditional state value => ${conditionalNextStateValue} , system event code => ${onChangeSystemEventCode}`
+    );
+    setDescription("Dummy Data");
+    console.log(
+      `pre trans value=> ${postTransitionValueData} , post trans value=> ${preTransitionValueData} , conditional state value => ${conditionalNextStateValueData} , system event code => ${onChangeSystemEventCode}`
+    );
+    setEdgeOpenFormModal(false);
+    alterEdge(transitionName, description, edge.id);
   };
 
   // transtion value data 2ns drop down
@@ -93,7 +98,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
       setNameErrorMessage("");
     }
   };
-
+  const transitionName = watch("transitionName");
   const light = "white";
   const dark = "#1d1c1c";
 
@@ -276,20 +281,15 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            methods.handleSubmit((data) => {
-              // console.log(;
-              console.log(data);
+            handleSubmit((data) => {
+              edgeFormAcceptHandler();
             })();
           }}
         >
           <div className={contentStyles.body}>
             <div>
-              {/* <form onSubmit={methods.handleSubmit(console.log(first))}> */}
-              <TextField
-                // required={true}
-                // errorMessage={nameErrorMessage}
+              {/* <TextField
                 {...methods.register("Transition_name", {
-                  required: true,
                   minLength: { value: 3, message: "Min Length is 3" },
                 })}
                 onChange={onChangeHandlerName}
@@ -300,9 +300,19 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                   fontWeight: "400",
                 }}
                 placeholder="Enter transition name  here"
+              /> */}
+              <Input
+                style={{ width: "300px" }}
+                control={control}
+                name={"transitionName"}
+                label="Transition Name"
+                rules={{
+                  required: "This is required",
+                  minLength: { value: 3, message: "Minimun value is 3" },
+                  maxLength: { value: 10, message: "Maximum val is 10" },
+                }}
+                placeholder="Enter transition name  here"
               />
-              {/* <button type="submit">ok</button> */}
-              {/* </form> */}
               <Dropdown
                 {...methods.register("system_event_code")}
                 // required={true}

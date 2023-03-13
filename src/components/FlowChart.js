@@ -46,18 +46,15 @@ const FlowChart = (props) => {
     NodeDescription: "",
   });
   const [openDialog, setOpenDialog] = useState(false);
-  // const [canvasColor, setCanvasColor] = useState("#232629");
   const [edges, setEdges] = useState(initialEdges);
   const [nodes, setNodes] = useState(initialNodes);
   const [openModal, setOpenModal] = useState(false);
-  // const [openFormModal, setOpenFormModal] = useState(false);
   const [openEdgeFormModal, setEdgeOpenFormModal] = useState(false);
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "div",
     drop: (item, monitor) => {
       console.log(isOver);
-      // const dropCoordinates = monitor.getClientOffset();
       setNodeObject({
         xCords: nodes.length > 0 ? nodes[nodes.length - 1].position.x : 500,
         yCords: nodes.length > 0 ? nodes[nodes.length - 1].position.y : 150,
@@ -70,9 +67,6 @@ const FlowChart = (props) => {
         nodeName: item.nodeName,
         NodeDescription: "",
       });
-      // setOpenModal((e) => {
-      //   return !e;
-      // });
       assignNodeValues(
         item.nodeBackgroundColor,
         item.nodeIcon,

@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import { Label } from "@fluentui/react-components";
-import { TextField } from "@fluentui/react/lib/TextField";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { Input, TextArea } from "./Input";
 import {
   Stack,
-  makeStyles,
   initializeIcons,
   mergeStyleSets,
   FontWeights,
@@ -16,21 +15,12 @@ import {
 } from "@fluentui/react/lib/Button";
 
 const NodeFormModal = ({ nodeData, setOpenModal, alterNode, theme, name }) => {
-  const nodeFormAcceptHandler = () => {
+  const nodeFormAcceptHandler = (data) => {
     setOpenModal(false);
-    alterNode(text, description);
-    console.log(nodeData.icon);
-  };
-  const [text, setText] = useState("");
-  const [description, setDescription] = useState("");
-  const onChangeHandlerName = (e) => {
-    setText(e.target.value);
-  };
-  const onChangeHandlerDescription = (e) => {
-    setDescription(e.target.value);
+    alterNode(stateName, description);
+    console.log(data);
   };
 
-  const inputClasses = useStyles();
   if (name === "input") {
     name = "Start";
   } else if (name === "default") {
@@ -39,18 +29,6 @@ const NodeFormModal = ({ nodeData, setOpenModal, alterNode, theme, name }) => {
     name = "Finish";
   }
   initializeIcons();
-  const labelStyle = {
-    marginTop: "10px",
-    fontSize: "14px",
-    fontWeight: "600",
-    color: theme ? "rgb(50, 49, 48)" : "#e2d6d6",
-    boxSizing: " border - box",
-    boxShadow: "none",
-    margin: "0px",
-    display: "inline - block",
-    padding: "5px 0px",
-    overflowWrap: "break-word",
-  };
   const contentStyles = mergeStyleSets({
     container: {
       borderTop: theme ? `4px solid #0a8cfa` : "4px solid #0a8cfa",
@@ -89,7 +67,16 @@ const NodeFormModal = ({ nodeData, setOpenModal, alterNode, theme, name }) => {
       },
     },
   });
-
+  const {
+    handleSubmit,
+    watch,
+    control,
+    formState: {},
+  } = useForm({
+    mode: "all",
+  });
+  const stateName = watch("stateName");
+  const description = watch("description");
   return (
     <div>
       <Modal
@@ -116,57 +103,66 @@ const NodeFormModal = ({ nodeData, setOpenModal, alterNode, theme, name }) => {
             }}
           />
         </div>
-        <div className={contentStyles.body}>
-          <Label style={labelStyle}>State Name</Label>
-          <TextField
-            onChange={onChangeHandlerName}
-            value={text}
-            className={inputClasses.stateName}
-            style={{
-              fontWeight: "400",
-            }}
-            placeholder="Enter state name  here"
-          />
-
-          <TextField
-            onChange={onChangeHandlerDescription}
-            value={description}
-            label="State Description"
-            className={inputClasses.stateDescription}
-            placeholder="Enter state description  here"
-          />
-        </div>
-        <Stack
-          tokens={{ childrenGap: 10 }}
-          horizontalAlign="end"
-          horizontal
-          styles={{ root: { padding: "10px" } }}
+        <form
+          onSubmit={
+            // e.preventDefault();
+            handleSubmit((data) => {
+              nodeFormAcceptHandler(data);
+            })
+          }
         >
-          <DefaultButton
-            text="CANCEL"
-            onClick={() => {
-              setOpenModal(false);
-            }}
-            allowDisabledFocus
-          />
-          <PrimaryButton
-            text="CONFIRM"
-            onClick={nodeFormAcceptHandler}
-            allowDisabledFocus
-          />
-        </Stack>
+          <div className={contentStyles.body}>
+            <Input
+              style={{ width: "300px" }}
+              control={control}
+              name={"stateName"}
+              label="State Name"
+              rules={{
+                required: "This is required",
+                minLength: { value: 3, message: "Minimun value 3" },
+                maxLength: { value: 10, message: "Maximum val 10" },
+              }}
+              placeholder="Enter state name  here"
+            />
+            <TextArea
+              style={{ width: "600px" }}
+              control={control}
+              name={"description"}
+              label="Description"
+              rules={{
+                required: "This is required",
+                minLength: { value: 3, message: "Minimun value 3" },
+                maxLength: { value: 30, message: "Maximum val 30" },
+              }}
+              placeholder="Enter description  here"
+            />
+          </div>
+          <div>
+            <Stack
+              tokens={{ childrenGap: 10 }}
+              horizontalAlign="end"
+              horizontal
+              styles={{ root: { padding: "10px" } }}
+            >
+              <DefaultButton
+                text="CANCEL"
+                onClick={() => {
+                  setOpenModal(false);
+                }}
+                allowDisabledFocus
+              />
+              <PrimaryButton
+                type="submit"
+                text="CONFIRM"
+                // onClick={nodeFormAcceptHandler}
+                allowDisabledFocus
+              />
+            </Stack>
+          </div>
+        </form>
       </Modal>
     </div>
   );
 };
-
-const useStyles = makeStyles({
-  stateName: {
-    width: "200px",
-  },
-  stateDescription: {
-    width: "400px",
-  },
-});
 
 export default NodeFormModal;
