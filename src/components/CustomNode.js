@@ -48,11 +48,13 @@ const CustomNode = (props) => {
         cursor: isDragging ? "grabbing" : "grab",
         display: "flex",
         flexDirection: "column",
-        height: isDragging ? "100px" : "wrap",
+        height: props.parent === "rightBar" ? "100px" : "55px",
         width: props.parent === "rightBar" ? "180px" : "fit-content",
         minWidth: "138px",
         border: border,
         backgroundColor: props.NodebackgroundColor,
+        // backgroundColor: "transparent",
+
         borderRadius: isDragging ? "0px" : "5px",
         margin: props.parent === "rightBar" ? props.Nodemargin : "-5px",
         padding: props.parent === "rightBar" ? "15px" : "10px",
@@ -83,7 +85,7 @@ const CustomNode = (props) => {
             fontSize: props.parent === "rightBar" ? "15px" : "9px",
           }}
         >
-          {props.NodeDescription}
+          {/* {props.NodeDescription} */}
         </span>
       </div>
     </motion.div>

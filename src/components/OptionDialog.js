@@ -13,7 +13,7 @@ const OptionDialog = (props) => {
   const onAddDefaultHandler = () => {
     props.setOpenDialog((val) => !val);
     props.assignNodeValues(
-      "#208d7c",
+      "#5c59599e",
       <SiMobxstatetree />,
       "default",
       "Continuation"

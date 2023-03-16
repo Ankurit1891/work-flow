@@ -18,7 +18,7 @@ const initialNodes = [
             width: "wrap",
             maxWidth: "170px",
             border: "1px solid white",
-            backgroundColor: "#0078d4",
+            backgroundColor: "#656ac6",
             borderRadius: "5px",
             margin: "-5px",
             padding: "10px",

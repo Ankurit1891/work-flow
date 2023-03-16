@@ -2,7 +2,15 @@ import { TextField } from "@fluentui/react";
 import React from "react";
 import { Controller } from "react-hook-form";
 
-export const Input = ({ control, name, label, placeholder, rules, style }) => {
+export const Input = ({
+  control,
+  name,
+  label,
+  placeholder,
+  rules,
+  style,
+  data,
+}) => {
   return (
     <div style={style}>
       <Controller
@@ -14,6 +22,7 @@ export const Input = ({ control, name, label, placeholder, rules, style }) => {
             <TextField
               label={label}
               placeholder={placeholder}
+              defaultValue={data}
               value={field.value}
               onChange={field.onChange}
               errorMessage={fieldState.error?.message ?? undefined}

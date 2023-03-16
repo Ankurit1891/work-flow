@@ -31,13 +31,14 @@ const NodeFormModal = ({ nodeData, setOpenModal, alterNode, theme, name }) => {
   initializeIcons();
   const contentStyles = mergeStyleSets({
     container: {
+      height: "27%",
       borderTop: theme ? `4px solid #0a8cfa` : "4px solid #0a8cfa",
       borderLeft: "1px solid grey",
       boxShadow: theme ? "5px 5px 5px #313233" : "5px 5px 5px grey",
       display: "flex",
       flexFlow: "column nowrap",
       alignItems: "stretch",
-      width: "50%",
+      width: "40%",
       fontSize: "27px ",
     },
     header: [
@@ -104,27 +105,25 @@ const NodeFormModal = ({ nodeData, setOpenModal, alterNode, theme, name }) => {
           />
         </div>
         <form
-          onSubmit={
-            // e.preventDefault();
-            handleSubmit((data) => {
-              nodeFormAcceptHandler(data);
-            })
-          }
+          onSubmit={handleSubmit((data) => {
+            nodeFormAcceptHandler(data);
+          })}
         >
-          <div className={contentStyles.body}>
-            <Input
-              style={{ width: "300px" }}
-              control={control}
-              name={"stateName"}
-              label="State Name"
-              rules={{
-                required: "This is required",
-                minLength: { value: 3, message: "Minimun value 3" },
-                maxLength: { value: 10, message: "Maximum val 10" },
-              }}
-              placeholder="Enter state name  here"
-            />
-            <TextArea
+          <div style={{ display: "flex", flexDirection: "column" }}>
+            <div className={contentStyles.body}>
+              <Input
+                style={{ width: "300px" }}
+                control={control}
+                name={"stateName"}
+                label="State Name"
+                rules={{
+                  required: "This is required",
+                  minLength: { value: 3, message: "Minimun value 3" },
+                  maxLength: { value: 10, message: "Maximum val 10" },
+                }}
+                placeholder="Enter state name  here"
+              />
+              {/* <TextArea
               style={{ width: "600px" }}
               control={control}
               name={"description"}
@@ -135,29 +134,30 @@ const NodeFormModal = ({ nodeData, setOpenModal, alterNode, theme, name }) => {
                 maxLength: { value: 30, message: "Maximum val 30" },
               }}
               placeholder="Enter description  here"
-            />
-          </div>
-          <div>
-            <Stack
-              tokens={{ childrenGap: 10 }}
-              horizontalAlign="end"
-              horizontal
-              styles={{ root: { padding: "10px" } }}
-            >
-              <DefaultButton
-                text="CANCEL"
-                onClick={() => {
-                  setOpenModal(false);
-                }}
-                allowDisabledFocus
-              />
-              <PrimaryButton
-                type="submit"
-                text="CONFIRM"
-                // onClick={nodeFormAcceptHandler}
-                allowDisabledFocus
-              />
-            </Stack>
+            /> */}
+            </div>
+            <div style={{ marginTop: "30px", marginRight: "10px" }}>
+              <Stack
+                tokens={{ childrenGap: 10 }}
+                horizontalAlign="end"
+                horizontal
+                styles={{ root: { padding: "10px" } }}
+              >
+                <DefaultButton
+                  text="CANCEL"
+                  onClick={() => {
+                    setOpenModal(false);
+                  }}
+                  allowDisabledFocus
+                />
+                <PrimaryButton
+                  type="submit"
+                  text="CONFIRM"
+                  // onClick={nodeFormAcceptHandler}
+                  allowDisabledFocus
+                />
+              </Stack>
+            </div>
           </div>
         </form>
       </Modal>

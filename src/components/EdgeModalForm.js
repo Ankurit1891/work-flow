@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { Input } from "./Input";
 import event_code from "../api_data/event_code";
 import React, { useState, useEffect } from "react";
-// import { TextField } from "@fluentui/react/lib/TextField";
 import { Dropdown } from "@fluentui/react/lib/Dropdown";
 import { AddCircle24Filled } from "@fluentui/react-icons";
 
@@ -33,26 +32,13 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
   });
   const [counter, setcounter] = useState([]);
 
-  const formCheckError = (text) => {
-    let value = {};
-    if (text.length === 0) {
-      value = { val: 1, message: "Enter a valid text" };
-      return value;
-    } else if (text.length > 0 && text.length < 3) {
-      value = { val: 2, message: "Minimun length should be 3" };
-      return value;
-    } else {
-      value = { val: 3, message: "" };
-      return value;
-    }
-  };
   const edgeFormAcceptHandler = () => {
     console.log(
-      `Transition name =>${transitionName}pre trans => ${preTransitionValue} , post trans => ${postTransitionValue} , conditional state value => ${conditionalNextStateValue} , system event code => ${onChangeSystemEventCode}`
+      `Transition name =>${transitionName}, pre trans => ${preTransitionValue} , post trans => ${postTransitionValue} , conditional state value => ${conditionalNextStateValue} , system event code => ${onChangeSystemEventCode}`
     );
     setDescription("Dummy Data");
     console.log(
-      `pre trans value=> ${postTransitionValueData} , post trans value=> ${preTransitionValueData} , conditional state value => ${conditionalNextStateValueData} , system event code => ${onChangeSystemEventCode}`
+      `pre trans value=> ${preTransitionValueData} , post trans value=> ${postTransitionValueData} , conditional state value => ${conditionalNextStateValueData}`
     );
     setEdgeOpenFormModal(false);
     alterEdge(transitionName, description, edge.id);
@@ -92,12 +78,12 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
     useState();
 
   // on name change handler
-  const onChangeHandlerName = (e) => {
-    setText(e.target.value);
-    if (e.target.value.length >= 3) {
-      setNameErrorMessage("");
-    }
-  };
+  // const onChangeHandlerName = (e) => {
+  //   setText(e.target.value);
+  //   if (e.target.value.length >= 3) {
+  //     setNameErrorMessage("");
+  //   }
+  // };
   const transitionName = watch("transitionName");
   const light = "white";
   const dark = "#1d1c1c";
@@ -203,7 +189,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
     marginTop: "10px",
   };
 
-  const inputClasses = useStyles();
+  // const inputClasses = useStyles();
 
   const onChangeSystemEventCodeHandler = (e, option) => {
     setOnChangeSystemEventCode(option.text);
@@ -251,7 +237,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
   };
   initializeIcons();
 
-  const methods = useForm();
+  // const methods = useForm();
   return (
     <motion.div>
       <Modal
@@ -288,22 +274,10 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
         >
           <div className={contentStyles.body}>
             <div>
-              {/* <TextField
-                {...methods.register("Transition_name", {
-                  minLength: { value: 3, message: "Min Length is 3" },
-                })}
-                onChange={onChangeHandlerName}
-                // value={text}
-                className={inputClasses.stateName}
-                label="Transition Name"
-                style={{
-                  fontWeight: "400",
-                }}
-                placeholder="Enter transition name  here"
-              /> */}
               <Input
                 style={{ width: "300px" }}
                 control={control}
+                data={edge.label}
                 name={"transitionName"}
                 label="Transition Name"
                 rules={{
@@ -314,9 +288,9 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                 placeholder="Enter transition name  here"
               />
               <Dropdown
-                {...methods.register("system_event_code")}
+                // {...methods.register("system_event_code")}
                 // required={true}
-                // onChange={onChangeSystemEventCodeHandler}
+                onChange={onChangeSystemEventCodeHandler}
                 label="System Event Code"
                 placeholder="Select an option"
                 options={systemCodeData}
@@ -338,7 +312,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                     styles={{ root: {} }}
                   >
                     <Dropdown
-                      {...methods.register("Pre_Transition_Action")}
+                      // {...methods.register("Pre_Transition_Action")}
                       label="Pre-Transition Action"
                       onChange={onChangePreTransitionHandler}
                       placeholder="Select an option"
@@ -355,7 +329,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                           }}
                         >
                           <Dropdown
-                            {...methods.register(`${preTransitionValue}_Data`)}
+                            // {...methods.register(`${preTransitionValue}_Data`)}
                             label={`${preTransitionValue} Data`}
                             onChange={onChangePreTransitionDataHandler}
                             placeholder="Select an option"
@@ -371,6 +345,9 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                         root: {
                           fontSize: "20px",
                           color: theme ? "black" : "red",
+                          "&:hover": {
+                            cursor: "pointer",
+                          },
                         },
                       }}
                       onClick={() => {
@@ -409,7 +386,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                   >
                     <Dropdown
                       label="Post-Transition Action"
-                      {...methods.register("Post_Transition_Action")}
+                      // {...methods.register("Post_Transition_Action")}
                       onChange={onChangePostTransitionHandler}
                       placeholder="Select an option"
                       options={postTransitionData}
@@ -426,7 +403,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                         >
                           <Dropdown
                             label={`${postTransitionValue} Data`}
-                            {...methods.register(`${postTransitionValue} Data`)}
+                            // {...methods.register(`${postTransitionValue} Data`)}
                             onChange={onChangePostTransitionDataHandler}
                             placeholder="Select an option"
                             options={postTransitionDropDownData}
@@ -441,6 +418,9 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                         root: {
                           fontSize: "20px",
                           color: theme ? "black" : "red",
+                          "&:hover": {
+                            cursor: "pointer",
+                          },
                         },
                       }}
                       onClick={() => {
@@ -480,7 +460,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                     styles={{ root: {} }}
                   >
                     <Dropdown
-                      {...methods.register("Conditional_Next_State")}
+                      // {...methods.register("Conditional_Next_State")}
                       onChange={onChangeConditionalNextStateHandler}
                       label="Conditional Next State"
                       placeholder="Select an option"
@@ -497,9 +477,9 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                           }}
                         >
                           <Dropdown
-                            {...methods.register(
-                              `${conditionalNextStateValue} Data`
-                            )}
+                            // {...methods.register(
+                            //   `${conditionalNextStateValue} Data`
+                            // )}
                             label={`${conditionalNextStateValue} Data`}
                             onChange={onChangeConditionalNextStateDataHandler}
                             placeholder="Select an option"
@@ -515,6 +495,9 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                         root: {
                           fontSize: "20px",
                           color: theme ? "black" : "red",
+                          "&:hover": {
+                            cursor: "pointer",
+                          },
                         },
                       }}
                       onClick={() => {
@@ -589,12 +572,7 @@ const EdgeModalForm = ({ edge, setEdgeOpenFormModal, alterEdge, theme }) => {
                 }}
                 allowDisabledFocus
               />
-              <PrimaryButton
-                type="submit"
-                text="CONFIRM"
-                // onClick={edgeFormAcceptHandler}
-                allowDisabledFocus
-              />
+              <PrimaryButton type="submit" text="CONFIRM" allowDisabledFocus />
             </Stack>
           </div>
         </form>

@@ -1,5 +1,6 @@
 import { useCallback, useState } from "react";
 import { motion } from "framer-motion";
+import { Panel } from "@fluentui/react/lib/Panel";
 import "reactflow/dist/style.css";
 import { BsSave2 } from "react-icons/bs";
 import { BsFillPrinterFill } from "react-icons/bs";
@@ -21,13 +22,19 @@ import EdgeModalForm from "./EdgeModalForm";
 import html2canvas from "html2canvas";
 import OptionDialog from "./OptionDialog";
 import NodeFormModal from "./NodeFormModal";
+import AlterNode from "./AlterNode";
+import EdgeFormPanel from "./EdgeFormPanel";
+import { useBoolean } from "@fluentui/react-hooks";
 
 const FlowChart = (props) => {
+  const [isOpen, { setTrue: openPanel, setFalse: closePanel }] =
+    useBoolean(false);
   const [nodeValues, setnodeValues] = useState({
     color: "",
     icon: {},
     type: "",
   });
+  const [editNodeForm, seteditNodeForm] = useState(false);
   const [nodeName, setnodeName] = useState("");
   const [coords, setCoords] = useState({ x: 0, y: 0 });
   const [selectedEdge, setSelectedEdge] = useState(null);
@@ -54,7 +61,7 @@ const FlowChart = (props) => {
   const [{ isOver }, drop] = useDrop(() => ({
     accept: "div",
     drop: (item, monitor) => {
-      console.log(isOver);
+      console.log("isOver");
       setNodeObject({
         xCords: nodes.length > 0 ? nodes[nodes.length - 1].position.x : 500,
         yCords: nodes.length > 0 ? nodes[nodes.length - 1].position.y : 150,
@@ -107,7 +114,7 @@ const FlowChart = (props) => {
     }
 
     const newNode = {
-      id: id === null ? `${nodes.length}` : id,
+      id: id === null ? `${nodes.length}` : id === 0 ? "0" : id,
       icon: icon,
       name: name,
       description: description,
@@ -145,12 +152,19 @@ const FlowChart = (props) => {
           : 150,
       },
     };
-    setNodes((prevNode) => {
-      return [...prevNode, newNode];
-    });
+    if (id !== 0) {
+      setNodes((prevNode) => {
+        return [...prevNode, newNode];
+      });
+    } else if (nodes[0].id !== "0") {
+      setNodes((prevNode) => {
+        return [newNode, ...prevNode];
+      });
+    }
+
     props.updatedNodes(nodes);
   };
-
+  console.log(nodes[0].id);
   const onNodesChange = useCallback(
     (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
     [setNodes]
@@ -177,7 +191,6 @@ const FlowChart = (props) => {
         },
         labelShowBg: true,
         label: "",
-        description: "",
         markerEnd: {
           type: MarkerType.ArrowClosed,
           color: "grey",
@@ -212,6 +225,8 @@ const FlowChart = (props) => {
     event.stopPropagation();
     event.preventDefault();
     setSelectedEdge(edge);
+    // setIsPanelOpen(true);
+    openPanel();
     setEdgeOpenFormModal(true);
   };
 
@@ -257,17 +272,32 @@ const FlowChart = (props) => {
   };
 
   const onAlterNode = (text, desc) => {
-    onAddNode(
-      1212,
-      nodeValues.color,
-      "wrap",
-      "-5px",
-      nodeValues.icon,
-      text,
-      nodeValues.type,
-      desc
-    );
+    if (nodeValues.color !== "#656ac6") {
+      onAddNode(
+        1212,
+        nodeValues.color,
+        "wrap",
+        "-5px",
+        nodeValues.icon,
+        text,
+        nodeValues.type,
+        desc
+      );
+    } else {
+      onAddNode(
+        1212,
+        nodeValues.color,
+        "wrap",
+        "-5px",
+        nodeValues.icon,
+        text,
+        nodeValues.type,
+        desc,
+        0
+      );
+    }
   };
+
   const removeNode = (id) => {
     let newNodes = [];
     nodes.map((node) => {
@@ -284,6 +314,10 @@ const FlowChart = (props) => {
     setOpenDialog(false);
     event.stopPropagation();
     event.preventDefault();
+    editNode(event, node);
+  };
+  //edit node
+  const editNode = (event, node) => {
     if (node.id !== "0") {
       const nodeCp = node;
       const id = node.id;
@@ -311,9 +345,9 @@ const FlowChart = (props) => {
       );
     }
   };
+
   const onAlterEdge = (text, desc, id) => {
     selectedEdge.label = text;
-    selectedEdge.description = desc;
     let newEdges = [];
     edges.forEach((edge, index) => {
       if (edge.id !== id) {
@@ -321,6 +355,7 @@ const FlowChart = (props) => {
       }
     });
     newEdges.push(selectedEdge);
+    newEdges.sort();
     setEdges(newEdges);
   };
 
@@ -355,21 +390,19 @@ const FlowChart = (props) => {
       )}
 
       {/* //Opening the form modal for edges */}
-      {openEdgeFormModal && (
-        <motion.div
-          initial={{ opacity: 0.5 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.05 }}
-        >
-          <EdgeModalForm
-            theme={props.theme}
-            edge={selectedEdge}
-            alterEdge={onAlterEdge}
-            setEdgeOpenFormModal={setEdgeOpenFormModal}
-          ></EdgeModalForm>
-        </motion.div>
-      )}
+
+      {/* <motion.div
+        initial={{ opacity: 0.5 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.05 }}
+      > */}
+      <EdgeFormPanel
+        isOpen={isOpen}
+        dismissHandler={closePanel}
+        theme={props.theme}
+      />
+      {/* </motion.div> */}
       {/* {//Opening the form modal for nodes on right click} */}
       {openModal && (
         <NodeFormModal
@@ -377,10 +410,17 @@ const FlowChart = (props) => {
           theme={props.theme}
           node={selectedNode}
           nodeData={nodeValues}
-          // nodeIcon={nodeObject.nodeIcon}
-          // nodeBackgroundColor={nodeObject.nodeBackgroundColor}
           setOpenModal={setOpenModal}
           alterNode={onAlterNode}
+        />
+      )}
+      {editNodeForm && (
+        <AlterNode
+          name={nodeName}
+          theme={props.theme}
+          node={selectedNode}
+          nodeData={nodeValues}
+          seteditNodeForm={seteditNodeForm}
         />
       )}
       <ReactFlow
@@ -414,7 +454,6 @@ const FlowChart = (props) => {
             display: "flex",
             flexDirection: "row",
             padding: "2px",
-            // marginTop: "30px",
           }}
         >
           <ControlButton

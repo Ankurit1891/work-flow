@@ -3,7 +3,7 @@ import { SiMobxstatetree } from "react-icons/si";
 import { GoCircleSlash } from "react-icons/go";
 
 const nodeStyle = {
-  background: "#ffffff",
+  background: "transparent",
   color: "#000000",
   width: 100,
   height: 50,
@@ -25,7 +25,7 @@ const nodeList = [
     nodeIcon: <VscDebugStart />,
     nodeHeight: "100px",
     nodeWidth: "fit-content",
-    nodeBackgroundColor: "#0078d4",
+    nodeBackgroundColor: "#656ac6",
     nodeBorderRadius: "10px",
     nodeMargin: "10px",
     nodePadding: "20px",
@@ -39,7 +39,9 @@ const nodeList = [
     nodeIcon: <SiMobxstatetree />,
     nodeHeight: "100px",
     nodeWidth: "fit-content",
-    nodeBackgroundColor: "#208d7c",
+    // nodeBackgroundColor: "#208d7c",
+    nodeBackgroundColor: "#5c59599e",
+
     nodeBorderRadius: "10px",
     nodeMargin: "10px",
     nodePadding: "20px",
